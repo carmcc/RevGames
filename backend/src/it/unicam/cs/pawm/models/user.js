@@ -3,7 +3,7 @@ const sequelize = require('../config/db');
 
 class User extends Model {}
 
-User.init( 
+User.init(
 {
     id: {
         type: DataTypes.INTEGER,
@@ -24,6 +24,12 @@ User.init(
         allowNull: false
     }
 },
-    {modelName: "Users", sequelize});
+    {
+        sequelize,
+        modelName: "Users",
+        timestamps: false,
+        force: true
+    });
+
 
 module.exports = User;
