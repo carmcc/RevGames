@@ -1,4 +1,5 @@
 const bcrypt = require('bcryptjs');
+const secretKey = process.env.PASSWORD_HASH_SECRET;
 
 /**
  * Generate a password hash
@@ -6,8 +7,8 @@ const bcrypt = require('bcryptjs');
  * @returns {Promise<*>} password hash
  */
 async function generatePasswordHash(raw) {
-    const salt = await bcrypt.genSalt(10);
-    return await bcrypt.hash(raw, salt);
+    const rawWithSecret = raw + secretKey;
+    return await bcrypt.hash(rawWithSecret, 15);
 }
 
 /**
@@ -17,7 +18,8 @@ async function generatePasswordHash(raw) {
  * @returns {Promise<*>} true if the password is valid, false otherwise
  */
 async function comparePassword(raw, hash) {
-    return await bcrypt.compare(raw, hash);
+    const rawWithSecret = raw + secretKey;
+    return await bcrypt.compare(rawWithSecret, hash);
 }
 
 module.exports = {
