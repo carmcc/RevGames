@@ -2,7 +2,7 @@ const User = require('../models/user')
 const validator = require('validator')
 const { generatePasswordHash, comparePassword } = require('../utils/security')
 const Sequelize = require('sequelize')
-
+const {generateAccessToken, generateRefreshToken, verifyToken} = require('../authentication/jwt_auth');
 /**
  * Registration of a new user
  * @param req
@@ -26,7 +26,7 @@ exports.register = async (req, res) => {
     //controllo se l'utente esiste già
     const existingUser = await User.findOne({ where: { [Sequelize.Op.or]: [{username: username}, {email: email}] }});
     if (existingUser) {
-         return res.status(400).json('Username or email already exists');
+        return res.status(400).json('Username or email already exists');
     }
     const hash = await generatePasswordHash(password);
     try {
@@ -53,7 +53,7 @@ exports.login = async (req, res) => {
     if(password === undefined || password === '' || username === '' || username === undefined)
         return res.status(400).json('Username or password missing');
 
-    //controllo se l'utente esiste
+    //controllo se l'username esiste
     const user = await User.findOne({where: { username: username}});
     if (!user)
         return res.status(401).json('Invalid username or password');
@@ -61,7 +61,24 @@ exports.login = async (req, res) => {
     const isPasswordValid = await comparePassword(password, user.password);
     if(!isPasswordValid)
         return res.status(401).json('Invalid username or password');
-    return res.status(200).json('Login successful');
+
+    //genero i token con i dati dell'utente
+    const accessToken = generateAccessToken({username: user.username, email: user.email});
+    const refreshToken = generateRefreshToken({username: user.username, email: user.email});
+    return res.status(200).json({accessToken, refreshToken, message: "Login successfull"});
+}
+
+exports.protectedRoute = async (req, res, err) => {
+    try {
+        verifyToken(req, res, (err) => {
+            // if (err) {
+            //     return res.status(401).json('Invalid token');
+            // } else {
+                return res.status(200).json('Inside protected route');
+        });
+    } catch (err) {
+        res.status(500).json('Error');
+    }
 }
 
 exports.getAllUsers = async (req, res) => {
