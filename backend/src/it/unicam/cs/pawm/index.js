@@ -5,7 +5,7 @@ const cors = require('cors');
 const userRoutes = require('./routes/userRoute')
 const gameRoutes = require('./routes/gameRoute')
 
-app.use(cors());//TODO gestire il cors per una maggiore sicurezza
+app.use(cors({origin: 'http://localhost:8080', optionsSuccessStatus: 200}));
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
