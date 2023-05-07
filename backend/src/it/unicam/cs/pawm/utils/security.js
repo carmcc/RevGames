@@ -1,4 +1,5 @@
 const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
 const secretKey = process.env.PASSWORD_HASH_SECRET;
 
 /**
@@ -22,7 +23,16 @@ async function comparePassword(raw, hash) {
     return await bcrypt.compare(rawWithSecret, hash);
 }
 
+/**
+ * Generate a nonce token
+ * @returns {string} the nonce token
+ */
+function generateNonceToken() {
+    return crypto.randomBytes(16).toString('hex');
+}
+
 module.exports = {
     generatePasswordHash,
-    comparePassword
+    comparePassword,
+    generateNonceToken
 };
