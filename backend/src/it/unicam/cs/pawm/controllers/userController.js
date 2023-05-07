@@ -2,7 +2,7 @@ const User = require('../models/user')
 const validator = require('validator')
 const { generatePasswordHash, comparePassword } = require('../utils/security')
 const Sequelize = require('sequelize')
-const {generateAccessToken, generateRefreshToken, verifyToken} = require('../authentication/jwt_auth');
+const {generateAccessToken, generateRefreshToken, verifyToken, invalidateToken} = require('../authentication/jwt_auth');
 /**
  * Registration of a new user
  * @param req
@@ -66,6 +66,22 @@ exports.login = async (req, res) => {
     const accessToken = generateAccessToken({username: user.username, email: user.email});
     const refreshToken = generateRefreshToken({username: user.username, email: user.email});
     return res.status(200).json({accessToken, refreshToken, message: "Login successfull"});
+}
+/**
+ * Logout of an existing user
+ * @param req
+ * @param res
+ * @returns {Promise<*>} status code 200 if the logout is successful, 400 if the request is not valid,
+ */
+exports.logout = async (req, res) => {
+    //controllo se il token è presente
+    const token = req.header('Authorization')?.split(' ')[1];
+    if (!token)
+        return res.status(400).json('Token missing');
+    const invalidatedToken = await invalidateToken(token);
+    if (!invalidatedToken)
+        return res.status(400).json('Invalid token');
+    return res.status(200).json('Logout successfull');
 }
 
 exports.protectedRoute = async (req, res, err) => {
