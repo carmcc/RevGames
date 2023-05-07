@@ -1,6 +1,7 @@
 const jwt_auth = require('jsonwebtoken')
 require('dotenv').config()
 
+const invalidToken = [];
 /**
  * Generates an access token
  * @param payload
@@ -31,6 +32,10 @@ function verifyToken(req, res, next) {
 
     if(!token) return res.status(401).json('Unauthorized. Token not found');
 
+    //se il token è presente nell'array dei token invalidi, nego l'accesso
+    if (invalidToken.includes(token))
+        return res.status(403).json('Forbidden Access. Token is not valid');
+
     //verifico il token e lo decodifico, passando alla callback l'eventuale errore e l'utente
     jwt_auth.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
         if (err)
@@ -41,4 +46,24 @@ function verifyToken(req, res, next) {
     })
 }
 
-module.exports = {generateAccessToken, generateRefreshToken, verifyToken}
+/**
+ * Invalidates a token
+ * @param token the token to invalidate
+ * @returns {Promise<boolean>} true if the token is invalidated, false otherwise
+ */
+async function invalidateToken(token) {
+    try {
+        // verifico se il token è valido
+        await jwt_auth.verify(token, process.env.ACCESS_TOKEN_SECRET);
+
+        //se il token non è presente nell'array dei token invalidi, lo aggiungo per invalidarlo
+        if(!invalidToken.includes(token))
+            invalidToken.push(token);
+        //senza return true, il metodo non si conclude e non viene invalidato il token
+        return true;
+    } catch (error) {
+        console.error("Error invalidating token: ", error);
+        return false;
+    }
+}
+module.exports = {generateAccessToken, generateRefreshToken, verifyToken, invalidateToken}
