@@ -1,6 +1,6 @@
 const User = require('../models/user')
 const validator = require('validator')
-const { generatePasswordHash, comparePassword } = require('../utils/security')
+const { generatePasswordHash, comparePassword, generateNonceToken } = require('../utils/security')
 const Sequelize = require('sequelize')
 const {generateAccessToken, generateRefreshToken, verifyToken, invalidateToken} = require('../authentication/jwt_auth');
 /**
@@ -82,6 +82,17 @@ exports.logout = async (req, res) => {
     if (!invalidatedToken)
         return res.status(400).json('Invalid token');
     return res.status(200).json('Logout successfull');
+}
+
+/**
+ * Get a nonce token
+ * @param req
+ * @param res
+ * @returns {Promise<*>} the generated nonce token and the status code
+ */
+exports.getNonce = async (req, res) => {
+    const nonceToken = generateNonceToken();
+    return res.status(200).send({message: nonceToken, status: 200});
 }
 
 exports.protectedRoute = async (req, res, err) => {
