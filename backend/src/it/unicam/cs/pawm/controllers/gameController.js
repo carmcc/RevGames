@@ -63,7 +63,7 @@ exports.getGameByTitle = async (req, res) => {
  * @returns {Promise<*>} status code 201 if the game is created, 400 if the request is not valid, 500 if an error occurs
  */
 exports.addGame = async (req, res) => {
-    const {title, description, price} = req.body;
+    const {title, description, price, userId} = req.body;
     if(title === undefined || title === '' || description === '' || description === undefined || price === '' || price === undefined)
         return res.status(400).json('Title, description or price missing');
     if(title.length < 4 || title.length > 20)
@@ -73,7 +73,7 @@ exports.addGame = async (req, res) => {
     if(price < 0)
         return res.status(400).json('Price must be greater than 0');
     try {
-        const newGame = await Game.create({title, description, price});
+        const newGame = await Game.create({title, description, price, userId});
         await newGame.save();
         return res.status(201).json('Game created');
     } catch (err) {

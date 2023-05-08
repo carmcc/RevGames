@@ -24,15 +24,23 @@ Game.init(
             type: DataTypes.FLOAT,
             allowNull: false
         },
+        userId: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+                model: 'Users',
+                key: 'id'
+            }
+        }
     }
     ,
     {
         sequelize,
         modelName: "Games",
         timestamps: false,
-        force: true
-    });
+        //force: true
 
+    });
 //TODO inserire le associazioni con la tabella Users
 
 module.exports = Game;
