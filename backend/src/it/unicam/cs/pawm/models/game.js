@@ -20,20 +20,11 @@ Game.init(
             type: DataTypes.STRING,
             allowNull: false
         },
-        price: {
-            type: DataTypes.FLOAT,
+        url: {
+            type: DataTypes.STRING,
             allowNull: false
         },
-        userId: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            references: {
-                model: 'Users',
-                key: 'id'
-            }
-        }
-    }
-    ,
+    },
     {
         sequelize,
         modelName: "Games",
@@ -41,7 +32,6 @@ Game.init(
         //force: true
 
     });
-//TODO inserire le associazioni con la tabella Users
 
 module.exports = Game;
 

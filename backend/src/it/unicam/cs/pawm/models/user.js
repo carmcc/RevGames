@@ -22,13 +22,17 @@ User.init(
     email: {
         type: DataTypes.STRING,
         allowNull: false
+    },
+    isAdmin: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false
     }
 },
     {
         sequelize,
         modelName: "Users",
         timestamps: false,
-        //force: true
+        //force: true,
     });
 
 

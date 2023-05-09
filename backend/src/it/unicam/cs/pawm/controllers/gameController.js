@@ -1,6 +1,4 @@
 const Game = require("../models/game");
-const User = require("../models/user");
-const Sequelize = require("sequelize");
 
 /**
  * Get all games
@@ -63,17 +61,17 @@ exports.getGameByTitle = async (req, res) => {
  * @returns {Promise<*>} status code 201 if the game is created, 400 if the request is not valid, 500 if an error occurs
  */
 exports.addGame = async (req, res) => {
-    const {title, description, price, userId} = req.body;
-    if(title === undefined || title === '' || description === '' || description === undefined || price === '' || price === undefined)
-        return res.status(400).json('Title, description or price missing');
+    const {title, description, rating, url} = req.body;
+    if(title === undefined || title === '' || description === '' || description === undefined || rating === undefined || rating === '' || url==='' || url === undefined)
+        return res.status(400).json('Title, description, rating or url missing');
     if(title.length < 4 || title.length > 20)
         return res.status(400).json('Title must be between 4 and 20 characters');
     if(description.length < 4 || description.length > 100)
         return res.status(400).json('Description must be between 4 and 100 characters');
-    if(price < 0)
-        return res.status(400).json('Price must be greater than 0');
+    if(rating < 0 || rating > 5)
+        return res.status(400).json('Rating must be greater than 0');
     try {
-        const newGame = await Game.create({title, description, price, userId});
+        const newGame = await Game.create({title, description, rating, url});
         await newGame.save();
         return res.status(201).json('Game created');
     } catch (err) {
