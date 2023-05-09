@@ -59,20 +59,22 @@ export default {
     }
   },
   methods: {
-    registerUser() {
-      axios.post('http://localhost:3000/auth/register', {
+    async registerUser() {
+      await axios.post('auth/register', {
         username: this.username,
         email: this.email,
         password: this.password
-      })
-          .then(response => {
-            // Gestisci la risposta dal server se la registrazione ha avuto successo
-            console.log(response.data);
-          })
-          .catch(error => {
-            // Gestisci l'errore in caso di fallimento della registrazione
-            console.log(error.response.data);
-          });
+      });
+      // console.log(response);
+      this.$router.push('/signin');
+          // .then(response => {
+          //   // Gestisci la risposta dal server se la registrazione ha avuto successo
+          //   console.log(response.data);
+          // })
+          // .catch(error => {
+          //   // Gestisci l'errore in caso di fallimento della registrazione
+          //   console.log(error.response.data);
+          // });
     }
   }
 }

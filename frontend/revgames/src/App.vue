@@ -1,7 +1,7 @@
 <template>
 <!--  <img alt="Vue logo" src="./assets/logo.png">-->
   <NavSideBar></NavSideBar>
-  <router-view/>
+  <router-view></router-view>
   <ComponentFooter/>
 </template>
 

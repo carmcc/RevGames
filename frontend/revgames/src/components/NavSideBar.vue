@@ -25,6 +25,9 @@
             <li class="nav-item">
               <a class="nav-link"><router-link to="/signin" >SignIn</router-link></a>
             </li>
+            <li class="nav-item">
+              <router-link to="/profile">Profile</router-link>
+            </li>
 <!--            <li class="nav-item dropdown">-->
 <!--              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">-->
 <!--                Dropdown-->
@@ -50,8 +53,14 @@
 </template>
 
 <script>
+// import axios from "axios";
+
 export default {
   name: "NavSideBar"
+  // created() {
+  //   const response = axios.get('api/protected');
+  //   console.log(response);
+  // }
 }
 </script>
 

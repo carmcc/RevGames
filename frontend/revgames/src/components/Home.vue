@@ -11,7 +11,7 @@
 <!--        </p>-->
 <!--      </div>-->
 <!--    </section>-->
-    <section class="jumbotron text-center" style="background-image: url('/codmw.jpeg');">
+    <section class="jumbotron text-center" style="background-image: url('./codmw.jpeg');">
         <div class="container">
             <h1 class="jumbotron-heading">Album example</h1>
             <p class="lead text-muted">Something short and leading about the collection below—its contents, the creator, etc. Make it short and sweet, but not too short so folks don't simply skip over it entirely.</p>
@@ -170,8 +170,38 @@
 </template>
 
 <script>
+// import axios from "axios";
+// export default {
+//   name: 'HomePage',
+//   mounted() {
+//     this.methods();
+//   }
+//   methods: {
+//     const response = axios.get('api/protected', localStorage.getItem('access_token'));
+//     console.log(response);
+//   }
+import axios from 'axios';
+
 export default {
-  name: 'HomePage'
+  name: 'HomePage',
+  mounted() {
+    this.auth();
+  },
+  methods: {
+    auth() {
+      // const response = localStorage.getItem('access_token');
+      console.log("porco il dio cane");``
+      axios.get('api/protected')
+          .then(response => {
+            console.log(response);
+            // il codice da eseguire dopo che la richiesta è stata completata con successo
+          })
+          .catch(error => {
+            console.log(error);
+            // il codice da eseguire in caso di errore durante la richiesta
+          });
+    }
+  }
 }
 </script>
 
