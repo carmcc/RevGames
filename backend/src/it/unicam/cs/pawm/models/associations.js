@@ -1,10 +1,13 @@
 const User = require("./user")
 const Game = require("./game")
+const Review = require("./review")
 function createAssociations() {
-     // User.belongsTo(Game, {onDelete:'CASCADE'});
-     // Game.hasMany(User, {foreignKey: 'userId', constraints:});
-     User.hasMany(Game, { foreignKey: 'userId', onDelete: 'CASCADE' });
-     Game.belongsTo(User, { foreignKey: 'userId', onDelete: 'CASCADE' });
+
+    User.hasMany(Review, { foreignKey: 'userId' });
+    Review.belongsTo(User, { foreignKey: 'userId' });
+
+    Game.hasMany(Review, { foreignKey: 'gameId'});
+    Review.belongsTo(Game, { foreignKey: 'gameId'});
 }
 
 module.exports = createAssociations
