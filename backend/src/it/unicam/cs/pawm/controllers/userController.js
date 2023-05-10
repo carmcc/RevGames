@@ -116,3 +116,15 @@ exports.getAllUsers = async (req, res) => {
         res.status(500).send({ message: err.message })
     }
 }
+//
+// exports.getUserByUsername = async (req, res) => {
+//     try {
+//         const user = await User.findOne({ username: req.params.username });
+//         if (!user) {
+//             return res.status(404).send({ message: 'User not found' });
+//         }
+//         res.send(user);
+//     } catch (err) {
+//         res.status(500).send({ message: err.message });
+//     }
+// };

@@ -27,14 +27,15 @@ function generateRefreshToken(payload) {
  * @param next
  */
 function verifyToken(req, res, next) {
-    const authHeader = req.header('Authorization')
+    const authHeader = req.header('Authorization');
     const token = authHeader && authHeader.split(' ')[1];
 
     if(!token) return res.status(401).json('Unauthorized. Token not found');
 
     //se il token è presente nell'array dei token invalidi, nego l'accesso
-    if (invalidToken.includes(token))
-        return res.status(403).json('Forbidden Access. Token is not valid');
+    if (invalidToken.includes(token)) {
+        return res.status(403).json('Forbidden Access. Token is not valid because it is expired');
+    }
 
     //verifico il token e lo decodifico, passando alla callback l'eventuale errore e l'utente
     jwt_auth.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {

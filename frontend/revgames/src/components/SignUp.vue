@@ -1,26 +1,5 @@
 <template>
-<!--  <div>-->
-<!--    <h2>Registrazione nuovo utente</h2>-->
-<!--    <form @submit.prevent="registerUser">-->
-<!--      <div>-->
-<!--        <label>Nome:</label>-->
-<!--        <input type="text" v-model="username" required>-->
-<!--      </div>-->
-<!--      <div>-->
-<!--        <label>Email:</label>-->
-<!--        <input type="email" v-model="email" required>-->
-<!--      </div>-->
-<!--      <div>-->
-<!--        <label>Password:</label>-->
-<!--        <input type="password" v-model="password" required>-->
-<!--      </div>-->
-<!--      <div>-->
-<!--        <button type="submit">Registrati</button>-->
-<!--      </div>-->
-<!--    </form>-->
-<!--  </div>-->
   <form @submit.prevent="registerUser">
-<!--    <img class="mb-4" src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">-->
     <h1 class="h3 mb-3 font-weight-normal">Please sign up</h1>
       <div>
         <label>Username:</label>
@@ -47,7 +26,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from '../axios';
 
 export default {
   name: 'SignUp',
@@ -59,20 +38,14 @@ export default {
     }
   },
   methods: {
-    registerUser() {
-      axios.post('http://localhost:3000/auth/register', {
+    async registerUser() {
+      await axios.post('auth/register', {
         username: this.username,
         email: this.email,
         password: this.password
-      })
-          .then(response => {
-            // Gestisci la risposta dal server se la registrazione ha avuto successo
-            console.log(response.data);
-          })
-          .catch(error => {
-            // Gestisci l'errore in caso di fallimento della registrazione
-            console.log(error.response.data);
-          });
+      });
+      this.$router.push('/signin');
+
     }
   }
 }
