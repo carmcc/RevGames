@@ -10,7 +10,7 @@ const {generateAccessToken, generateRefreshToken, verifyToken, invalidateToken} 
  * @returns {Promise<*>} status code 201 if the user is created, 400 if the request is not valid, 500 if an error occurs
  */
 exports.register = async (req, res) => {
-    const {username, email, password, isAdmin} = req.body;
+    const {username, email, password} = req.body;
 
     if(password === undefined || password === '' || username === '' || username === undefined || email === '' || email === undefined)
         return res.status(400).json('Username, email or password missing');
@@ -31,7 +31,7 @@ exports.register = async (req, res) => {
     const hash = await generatePasswordHash(password);
     try {
         //creazione utente
-        const newUser = await User.create({username, email, password: hash, isAdmin: req.body.isAdmin});
+        const newUser = await User.create({username, email, password: hash});
         await newUser.save();
         res.status(201).json('User created');
 
