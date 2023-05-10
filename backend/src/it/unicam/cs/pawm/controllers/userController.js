@@ -2,7 +2,7 @@ const User = require('../models/user')
 const validator = require('validator')
 const { generatePasswordHash, comparePassword, generateNonceToken } = require('../utils/security')
 const Sequelize = require('sequelize')
-const {generateAccessToken, generateRefreshToken, verifyToken, invalidateToken} = require('../authentication/jwt_auth');
+const {generateAccessToken, generateRefreshToken, verifyAccessToken, verifyRefreshToken, invalidateToken} = require('../authentication/jwt_auth');
 /**
  * Registration of a new user
  * @param req
@@ -95,18 +95,26 @@ exports.getNonce = async (req, res) => {
     return res.status(200).send({message: nonceToken, status: 200});
 }
 
-exports.protectedRoute = async (req, res, err) => {
+exports.protectedRoute = async (req, res) => {
     try {
-        verifyToken(req, res, (err) => {
-            // if (err) {
-            //     return res.status(401).json('Invalid token');
-            // } else {
+        verifyAccessToken(req, res, async () => {
                 return res.status(200).json('Inside protected route');
         });
     } catch (err) {
         res.status(500).json('Error');
     }
 }
+
+exports.verifyRefreshToken = async (req, res) => {
+    try{
+        verifyRefreshToken(req, res, async () => {
+                return res.status(200).json('Refresh token validated');
+        });
+    } catch (err) {
+        res.status(500).json('Error');
+    }
+}
+
 
 exports.getAllUsers = async (req, res) => {
     try{
@@ -116,6 +124,14 @@ exports.getAllUsers = async (req, res) => {
         res.status(500).send({ message: err.message })
     }
 }
+
+
+
+
+
+
+
+
 //
 // exports.getUserByUsername = async (req, res) => {
 //     try {

@@ -1,7 +1,8 @@
 const jwt_auth = require('jsonwebtoken')
 require('dotenv').config()
 
-const invalidToken = [];
+let invalidToken = [];
+
 /**
  * Generates an access token
  * @param payload
@@ -26,7 +27,7 @@ function generateRefreshToken(payload) {
  * @param res
  * @param next
  */
-function verifyToken(req, res, next) {
+function verifyAccessToken(req, res, next) {
     const authHeader = req.header('Authorization');
     const token = authHeader && authHeader.split(' ')[1];
 
@@ -46,6 +47,33 @@ function verifyToken(req, res, next) {
         next();
     })
 }
+
+
+/**
+ * Verifies if the refresh token is valid and not expired
+ * @param req
+ * @param res
+ * @param next
+ */
+function verifyRefreshToken(req, res, next)
+{
+    const authHeader = req.header('Authorization');
+    const token = authHeader && authHeader.split(' ')[1];
+
+    if(!token) return res.status(401).json('Unauthorized. Token not found');
+
+    //se il token è presente nell'array dei token invalidi, nego l'accesso
+    if (invalidToken.includes(token)) {
+        return res.status(403).json('Forbidden Access. Token is not valid because it is expired');
+    }
+    jwt_auth.verify(token, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
+        if (err)
+            return res.status(403).json('Forbidden Access. Token is not valid');
+        req.user = user;
+        next();
+    })
+}
+
 
 /**
  * Invalidates a token
@@ -67,4 +95,6 @@ async function invalidateToken(token) {
         return false;
     }
 }
-module.exports = {generateAccessToken, generateRefreshToken, verifyToken, invalidateToken}
+
+
+module.exports = {generateAccessToken, generateRefreshToken, verifyAccessToken, verifyRefreshToken, invalidateToken}
