@@ -23,8 +23,7 @@
 </template>
 
 <script>
-import axios from 'axios';
-
+import axios from '../axios';
 export default {
   name: 'SignIn',
   data() {
@@ -39,22 +38,9 @@ export default {
         username: this.username,
         password: this.password
       });
-      // console.log(response);
       localStorage.setItem('access_token', response.data.accessToken);
       localStorage.setItem('refresh_token', response.data.refreshToken);
       this.$router.push('/');
-
-      // .then(response => {
-          //   // Gestisci la risposta dal server se la login ha avuto successo
-          //   const responseData = {message: 'Login effettuata con successo', data: response.data};
-          //   console.log(responseData);
-          // })
-          // .catch(error => {
-          //   // Gestisci l'errore in caso di fallimento della login
-          //   console.log(this.username,this.password);
-          //   // console.log({data:error.response.data});
-          //   console.log(error);
-          // });
     }
   }
 

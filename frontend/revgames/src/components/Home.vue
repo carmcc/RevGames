@@ -1,6 +1,4 @@
 <template>
-
-
 <!--    <section class="jumbotron text-center">-->
 <!--      <div class="container">-->
 <!--        <h1 class="jumbotron-heading">Album example</h1>-->
@@ -170,37 +168,13 @@
 </template>
 
 <script>
-// import axios from "axios";
-// export default {
-//   name: 'HomePage',
-//   mounted() {
-//     this.methods();
-//   }
-//   methods: {
-//     const response = axios.get('api/protected', localStorage.getItem('access_token'));
-//     console.log(response);
-//   }
-import axios from 'axios';
+import axios from '../axios';
 
 export default {
   name: 'HomePage',
-  mounted() {
-    this.auth();
-  },
-  methods: {
-    auth() {
-      // const response = localStorage.getItem('access_token');
-      console.log("porco il dio cane");``
-      axios.get('api/protected')
-          .then(response => {
-            console.log(response);
-            // il codice da eseguire dopo che la richiesta è stata completata con successo
-          })
-          .catch(error => {
-            console.log(error);
-            // il codice da eseguire in caso di errore durante la richiesta
-          });
-    }
+  async created(){
+    const response = await axios.get('api/protected');
+    console.log(response);
   }
 }
 </script>
