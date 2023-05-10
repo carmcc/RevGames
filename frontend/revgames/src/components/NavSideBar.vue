@@ -20,10 +20,13 @@
               <a class="nav-link active" aria-current="page"><router-link to="/">Home</router-link></a>
             </li>
             <li class="nav-item">
-              <a class="nav-link"><router-link to="/signup" >SignUp</router-link></a>
+              <a class="nav-link"><router-link to="/signup" v-if="!isLogged">SignUp</router-link></a>
             </li>
             <li class="nav-item">
-              <a class="nav-link"><router-link to="/signin" >SignIn</router-link></a>
+              <a class="nav-link"><router-link to="/signin" v-if="!isLogged">SignIn</router-link></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link"><router-link to="/logout" v-if="isLogged">Logout</router-link></a>
             </li>
 <!--            <li class="nav-item">-->
 <!--              <router-link to="/profile">Profile</router-link>-->
@@ -54,7 +57,13 @@
 
 <script>
 export default {
-  name: "NavSideBar"
+  name: "NavSideBar",
+  computed: {
+    isLogged() {
+      return this.$store.state.isLogged
+    }
+  }
+
 }
 </script>
 

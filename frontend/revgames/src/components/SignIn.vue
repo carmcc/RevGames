@@ -38,8 +38,10 @@ export default {
         username: this.username,
         password: this.password
       });
-      localStorage.setItem('access_token', response.data.accessToken);
-      localStorage.setItem('refresh_token', response.data.refreshToken);
+      this.$store.dispatch('login', {
+        accessToken: response.data.accessToken,
+        refreshToken: response.data.refreshToken
+      })
       this.$router.push('/');
     }
   }
