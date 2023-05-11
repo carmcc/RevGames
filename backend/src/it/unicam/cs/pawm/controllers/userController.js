@@ -98,7 +98,7 @@ exports.getNonce = async (req, res) => {
 exports.protectedRoute = async (req, res) => {
     try {
         verifyAccessToken(req, res, async () => {
-                return res.status(200).json('Inside protected route');
+                return res.status(200).json({message: 'Inside protected route', username: req.user.username,  status: 200});
         });
     } catch (err) {
         res.status(500).json('Error');
@@ -108,7 +108,7 @@ exports.protectedRoute = async (req, res) => {
 exports.verifyRefreshToken = async (req, res) => {
     try{
         verifyRefreshToken(req, res, async () => {
-                return res.status(200).json('Refresh token validated');
+                return res.status(200).json({message:'Refresh token validated', username: req.user.username,  status: 200});
         });
     } catch (err) {
         res.status(500).json('Error');
