@@ -178,6 +178,7 @@ export default {
   },
   async created(){
     const response = await axios.get('api/protected');
+    this.$store.dispatch('checkLogin',{username: response.data.username});
     console.log(response);
   }
 }

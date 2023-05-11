@@ -26,9 +26,10 @@ export default createStore({
             commit('setLogged', false);
             commit('setUsername', null);
         },
-        checkLogin({ commit }) {
+        checkLogin({ commit }, { username }) {
             const accessToken = localStorage.getItem('access_token');
             const refreshToken = localStorage.getItem('refresh_token');
+            commit('setUsername', username);
             if (accessToken && refreshToken) {
                 commit('setLogged', true);
             } else {
