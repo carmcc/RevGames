@@ -2,7 +2,7 @@ const User = require('../models/user')
 const validator = require('validator')
 const { generatePasswordHash, comparePassword, generateNonceToken } = require('../utils/security')
 const Sequelize = require('sequelize')
-const {generateAccessToken, generateRefreshToken, verifyAccessToken, verifyRefreshToken, invalidateToken} = require('../authentication/jwt_auth');
+const {generateAccessToken, generateRefreshToken, verifyAccessToken, verifyRefreshToken, invalidateAccessToken, invalidateRefreshToken} = require('../authentication/jwt_auth');
 /**
  * Registration of a new user
  * @param req
@@ -78,7 +78,7 @@ exports.logout = async (req, res) => {
     const token = req.header('Authorization')?.split(' ')[1];
     if (!token)
         return res.status(400).json('Token missing');
-    const invalidatedToken = await invalidateToken(token);
+    const invalidatedToken = await invalidateAccessToken(token);
     if (!invalidatedToken)
         return res.status(400).json('Invalid token');
     return res.status(200).json('Logout successfull');
@@ -105,6 +105,12 @@ exports.protectedRoute = async (req, res) => {
     }
 }
 
+/**
+ * Verifies the refresh token
+ * @param req
+ * @param res
+ * @returns {Promise<void>}
+ */
 exports.verifyRefreshToken = async (req, res) => {
     try{
         verifyRefreshToken(req, res, async () => {
@@ -115,13 +121,47 @@ exports.verifyRefreshToken = async (req, res) => {
     }
 }
 
-exports.newRefreshToken = async (req, res) => {
-try{
+/**
+ * Invalidates the refresh token
+ * @param req
+ * @param res
+ * @returns {Promise<*>}
+ */
+exports.invalidateRefreshToken = async (req, res) => {
+    try{
+        const refreshToken = req.header('Authorization')?.split(' ')[1];
+        if (!refreshToken)
+            return res.status(400).json('Refresh token missing');
+        const invalidatedRefreshToken = await invalidateRefreshToken(refreshToken);
+        if (!invalidatedRefreshToken)
+            return res.status(400).json('Invalid refresh token');
+        return res.status(200).json({message: 'Refresh token invalidated', status: 200});
+    } catch (err) {
+        res.status(500).json('Error');
+    }
+}
+
+/**
+ * Generates new tokens using the refresh token but the old refresh token and access token are invalidated
+ * @param req
+ * @param res
+ * @returns {Promise<*>} the new access token and refresh token
+ */
+//TODO FIX
+exports.generateNewTokens = async (req, res) => {
+    try
+
+    {
         verifyRefreshToken(req, res, async () => {
             const newAccessToken = generateAccessToken({username: req.user.username, email: req.user.email});
             const newRefreshToken = generateRefreshToken({username: req.user.username, email: req.user.email});
-            return res.status(200).json({accessToken: newAccessToken, refreshToken: newRefreshToken , message: "New access and refresh token generated"});
-        });
+
+            await invalidateRefreshToken(req.header('Authorization')?.split(' ')[1]);
+            await invalidateAccessToken(req.header('Authorization')?.split(' ')[1]);
+            return res.status(200).json({accessToken: newAccessToken, refreshToken: newRefreshToken, message: 'New refresh token generated', status: 200});
+
+        }
+        );
     } catch (err) {
         res.status(500).json('Error');
     }
@@ -135,12 +175,6 @@ exports.getAllUsers = async (req, res) => {
         res.status(500).send({ message: err.message })
     }
 }
-
-
-
-
-
-
 
 
 //
