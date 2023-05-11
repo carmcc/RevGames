@@ -10,6 +10,7 @@ router.get('/get-nonce', userController.getNonce)
 router.get('/api/protected', userController.protectedRoute)
 router.get('/users/allUsers', userController.getAllUsers)
 router.get('/verify-refreshToken', userController.verifyRefreshToken)
+router.get('/new-refreshToken', userController.newRefreshToken)
 // router.get('/users/username', userController.getUserByUsername)
 
 //modulo da esportare per le rotte, richiamato in index.js

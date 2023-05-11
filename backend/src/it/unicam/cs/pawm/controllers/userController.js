@@ -115,6 +115,17 @@ exports.verifyRefreshToken = async (req, res) => {
     }
 }
 
+exports.newRefreshToken = async (req, res) => {
+try{
+        verifyRefreshToken(req, res, async () => {
+            const newAccessToken = generateAccessToken({username: req.user.username, email: req.user.email});
+            const newRefreshToken = generateRefreshToken({username: req.user.username, email: req.user.email});
+            return res.status(200).json({accessToken: newAccessToken, refreshToken: newRefreshToken , message: "New access and refresh token generated"});
+        });
+    } catch (err) {
+        res.status(500).json('Error');
+    }
+}
 
 exports.getAllUsers = async (req, res) => {
     try{
