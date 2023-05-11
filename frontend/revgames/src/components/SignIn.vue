@@ -40,12 +40,12 @@ export default {
       });
       this.$store.dispatch('login', {
         accessToken: response.data.accessToken,
-        refreshToken: response.data.refreshToken
+        refreshToken: response.data.refreshToken,
+        username: this.username
       })
       this.$router.push('/');
     }
   }
-
 }
 </script>
 
