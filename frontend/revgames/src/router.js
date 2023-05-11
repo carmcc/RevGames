@@ -2,34 +2,65 @@ import SignUp  from "@/components/SignUp.vue";
 import Home from "@/components/Home.vue";
 import SignIn from "@/components/SignIn.vue";
 import Logout from "@/components/Logout.vue";
+import ErrorPage from "@/components/ErrorPage.vue";
 import { createRouter, createWebHistory } from "vue-router";
+
+const allowedRoutes = ["/", "/signup", "/signin", "/logout", "/error"];
 
 const routes = [
     {
         name: "SignUp",
         component: SignUp,
-        path: "/signup"
+        path: "/signup",
+        meta: {
+            hideNavbar: false
+        }
     },
     {
         name: "Home",
         component: Home,
-        path: "/"
+        path: "/",
+        meta: {
+            hideNavbar: false
+        }
     },
     {
         name: "SignIn",
         component: SignIn,
-        path: "/signin"
+        path: "/signin",
+        meta: {
+            hideNavbar: false
+        }
     },
     {
         name: "Logout",
         component: Logout,
-        path: "/logout"
-    }
+        path: "/logout",
+        meta: {
+            hideNavbar: false
+        }
+    },
+    {
+        name: "ErrorPage",
+        component: ErrorPage,
+        path: "/error",
+        meta: {
+            hideNavbar: true
+        }
+    },
 ];
 
 const router = createRouter({
     history: createWebHistory(),
     routes,
+});
+
+router.beforeEach((to, from, next) => {
+    if (allowedRoutes.includes(to.path)) {
+        next();
+    } else {
+        next({ name: "ErrorPage" });
+    }
 });
 
 export default router;

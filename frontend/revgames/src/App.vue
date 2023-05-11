@@ -1,6 +1,6 @@
 <template>
 <!--  <img alt="Vue logo" src="./assets/logo.png">-->
-  <NavSideBar></NavSideBar>
+  <NavSideBar v-if="!hideNavbar"></NavSideBar>
   <router-view></router-view>
   <ComponentFooter/>
 </template>
@@ -14,6 +14,11 @@ export default {
   components: {
     NavSideBar,
     ComponentFooter
+  },
+  computed: {
+    hideNavbar() {
+      return this.$route.meta.hideNavbar
+    }
   }
 }
 </script>
