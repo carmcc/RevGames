@@ -80,7 +80,7 @@ function verifyRefreshToken(req, res, next)
  * @param token the token to invalidate
  * @returns {Promise<boolean>} true if the token is invalidated, false otherwise
  */
-async function invalidateToken(token) {
+async function invalidateAccessToken(token) {
     try {
         // verifico se il token è valido
         await jwt_auth.verify(token, process.env.ACCESS_TOKEN_SECRET);
@@ -96,5 +96,24 @@ async function invalidateToken(token) {
     }
 }
 
+async function invalidateRefreshToken(token)
+{
+    try {
+        // verifico se il token è valido
+        await jwt_auth.verify(token, process.env.REFRESH_TOKEN_SECRET);
 
-module.exports = {generateAccessToken, generateRefreshToken, verifyAccessToken, verifyRefreshToken, invalidateToken}
+        //se il token non è presente nell'array dei token invalidi, lo aggiungo per invalidarlo
+        if(!invalidToken.includes(token))
+            invalidToken.push(token);
+        //senza return true, il metodo non si conclude e non viene invalidato il token
+        return true;
+    }
+    catch (error) {
+        console.error("Error invalidating  refresh token: ", error);
+        return false;
+    }
+}
+
+
+
+module.exports = {generateAccessToken, generateRefreshToken, verifyAccessToken, verifyRefreshToken, invalidateAccessToken, invalidateRefreshToken}
