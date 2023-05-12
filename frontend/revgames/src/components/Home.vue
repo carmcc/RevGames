@@ -1,14 +1,4 @@
 <template>
-<!--    <section class="jumbotron text-center">-->
-<!--      <div class="container">-->
-<!--        <h1 class="jumbotron-heading">Album example</h1>-->
-<!--        <p class="lead text-muted">Something short and leading about the collection below—its contents, the creator, etc. Make it short and sweet, but not too short so folks don't simply skip over it entirely.</p>-->
-<!--        <p>-->
-<!--          <a href="#" class="btn btn-primary my-2">Main call to action</a>-->
-<!--          <a href="#" class="btn btn-secondary my-2">Secondary action</a>-->
-<!--        </p>-->
-<!--      </div>-->
-<!--    </section>-->
     <section class="jumbotron text-center" style="background-image: url('./codmw.jpeg');">
         <div class="container">
             <h1 class="jumbotron-heading">Benvenuto/a {{username}}</h1>
@@ -21,44 +11,54 @@
     </section>
 
     <div class="album py-5 bg-light">
-      <div class="container">
-
-        <div class="row">
-          <CardGame/>
-          <CardGame/>
-          <CardGame/>
-          <CardGame/>
-          <CardGame/>
-          <CardGame/>
-          <CardGame/>
-          <CardGame/>
-          <CardGame/>
+        <div class="container">
+            <div class="row">
+                <CardGame v-for="card in cardLeaders" :key="card.id" :card="card" :title="card.title" :description="card.description" :rating="card.rating" :url="card.url" />
+            </div>
         </div>
-      </div>
     </div>
 
 </template>
 
 <script>
-// import axios from '../axios';
-import CardGame from "@/components/CardGame.vue";
+import axios from "@/axios";
+import CardGame from './CardGame.vue'; // Importa il componente CardGame
+
 export default {
-  name: 'HomePage',
-  components: {
-    CardGame
-  },
-  computed: {
-    username() {
-      return this.$store.state.username;
-    }
-  }
-  // async created(){
-  //   const response = await axios.get('api/protected');
-  //   this.$store.dispatch('checkLogin',{username: response.data.username});
-  //   console.log(response);
-  // }
-}
+    name: 'HomePage',
+    components: {
+        CardGame,
+    },
+    data() {
+        return {
+            cardLeaders: [], // Inizializza un array vuoto per i capi delle carte
+        };
+    },
+    computed: {
+        username() {
+            return this.$store.state.username;
+        },
+    },
+    mounted() {
+// Chiama la tua API sul backend per ottenere i capi delle carte
+// Esempio di chiamata API usando axios:
+axios.get('/games/myGames')
+  .then(response => {
+    this.cardLeaders = response.data;
+  })
+  .catch(error => {
+    console.error(error);
+  });
+    },
+    async created() {
+        const response = await axios.get('api/protected');
+        this.$store.dispatch('checkLogin', {username: response.data.username});
+        console.log(response);
+    },
+};
 </script>
+
+
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
@@ -93,3 +93,28 @@ export default {
 
 .box-shadow { box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05); }
 </style>
+//
+// // Per scopi dimostrativi, assumiamo che i dati dei capi delle carte siano già disponibili
+//         this.cardLeaders = [];
+
+
+<!--<script>-->
+<!--// import axios from '../axios';-->
+<!--import CardGame from "@/components/CardGame.vue";-->
+<!--export default {-->
+<!--  name: 'HomePage',-->
+<!--  components: {-->
+<!--    CardGame-->
+<!--  },-->
+<!--  computed: {-->
+<!--    username() {-->
+<!--      return this.$store.state.username;-->
+<!--    }-->
+<!--  }-->
+<!--  // async created(){-->
+<!--  //   const response = await axios.get('api/protected');-->
+<!--  //   this.$store.dispatch('checkLogin',{username: response.data.username});-->
+<!--  //   console.log(response);-->
+<!--  // }-->
+<!--}-->
+<!--</script>-->

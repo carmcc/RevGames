@@ -4,9 +4,10 @@ import SignIn from "@/components/SignIn.vue";
 import Logout from "@/components/Logout.vue";
 import ErrorPage from "@/components/ErrorPage.vue";
 import About from "@/components/About.vue";
+import AddGame from "@/components/AddGame.vue";
 import { createRouter, createWebHistory } from "vue-router";
 
-const allowedRoutes = ["/", "/signup", "/signin", "/logout", "/error", "/about"];
+const allowedRoutes = ["/", "/signup", "/signin", "/logout", "/error", "/about", "/addGame"];
 
 const routes = [
     {
@@ -56,7 +57,14 @@ const routes = [
         meta: {
             hideNavbar: false
         }
-
+    },
+    {
+        name: "AddGame",
+        component: AddGame,
+        path: "/addGame",
+        meta: {
+            hideNavbar: false
+        }
     }
 ];
 
