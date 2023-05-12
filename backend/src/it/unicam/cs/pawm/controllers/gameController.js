@@ -11,7 +11,7 @@ exports.getAllGames = async (req, res) => {
         const allGames = await Game.findAll();
         return res.status(200).json(allGames);
     } catch (err) {
-        return res.status(500).json("Error retrieving games");
+        return res.status(500).send({message: "Error retrieving games", status: 500});
     }
 }
 
@@ -19,19 +19,19 @@ exports.getAllGames = async (req, res) => {
  * Get a game by id
  * @param req
  * @param res
- * @returns {Promise<*>} status code 200 and the game if the request is valid, 400 if the request is not valid,
- * 404 if the game is not found, 500 if an error occurs
+ * @returns {Promise<*>} status code 200 and the game if the request is valid, 404 if the game is not found,
+ * 500 if an error occurs
  */
 exports.getGameById = async (req, res) => {
     try
     {
         const game = await Game.findByPk(req.params.id);
         if (game === null)
-            return res.status(404).json('Game not found');
+            return res.status(404).send({error: 'Game not found', status: 404});
         return res.status(200).json(game);
     }
     catch (err) {
-       return res.status(500).json('Error retrieving game');
+       return res.status(500).send({message: 'Error retrieving game', status: 500});
     }
 }
 
@@ -39,18 +39,18 @@ exports.getGameById = async (req, res) => {
  * Get a game by title
  * @param req
  * @param res
- * @returns {Promise<*>} status code 200 and the game if the request is valid, 400 if the request is not valid
+ * @returns {Promise<*>} status code 200 and the game, 404 if the game is not found, 500 if an error occurs
  */
 exports.getGameByTitle = async (req, res) => {
     try
     {
         const game = await Game.findOne({where: { title: req.params.title}});
         if (game === null)
-            return res.status(404).json('Game not found');
+            return res.status(404).send({message: 'Game not found', status: 404});
         return res.status(200).json(game);
     }
     catch (err) {
-        return res.status(500).json('Error retrieving game');
+        return res.status(500).send({message: 'Error retrieving game', status: 500});
     }
 }
 
@@ -63,19 +63,19 @@ exports.getGameByTitle = async (req, res) => {
 exports.addGame = async (req, res) => {
     const {title, description, rating, url} = req.body;
     if(title === undefined || title === '' || description === '' || description === undefined || rating === undefined || rating === '' || url==='' || url === undefined)
-        return res.status(400).json('Title, description, rating or url missing');
+        return res.status(400).send({message: 'Title, description, rating or url missing', status: 400});
     if(title.length < 4 || title.length > 20)
-        return res.status(400).json('Title must be between 4 and 20 characters');
+        return res.status(400).send({message: 'Title must be between 4 and 20 characters', status: 400});
     if(description.length < 4 || description.length > 100)
-        return res.status(400).json('Description must be between 4 and 100 characters');
+        return res.status(400).send({message: 'Description must be between 4 and 100 characters', status: 400});
     if(rating < 0 || rating > 5)
-        return res.status(400).json('Rating must be greater than 0');
+        return res.status(400).send({message: 'Rating must be greater than 0', status: 400});
     try {
         const newGame = await Game.create({title, description, rating, url});
         await newGame.save();
-        return res.status(201).json('Game created');
+        return res.status(201).send({message: 'Game created', status: 201});
     } catch (err) {
-        return res.status(500).send({message: 'Error creating game', status: 500});
+        return res.status(500).send({error: 'Error creating game', status: 500});
     }
 }
 /**
@@ -85,5 +85,5 @@ exports.addGame = async (req, res) => {
  * @returns {Promise<*>} status code 404
  */
 exports.error = async (req, res) => {
-    return res.status(404).json('Error');
+    return res.status(404).send({message: 'Error. Path not found', status: 404});
 }

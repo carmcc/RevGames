@@ -1,8 +1,8 @@
 module.exports = {
-    username: 'progweb',
-    password: 'mobile691',
+    username: 'root',
+    password: 'root',
     database: 'progetto_pawm',
-    host: 'db4free.net',
+    host: 'localhost',
     dialect: 'mysql',
     port: 3306,
     pool: {

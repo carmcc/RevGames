@@ -13,30 +13,30 @@ exports.register = async (req, res) => {
     const {username, email, password} = req.body;
 
     if(password === undefined || password === '' || username === '' || username === undefined || email === '' || email === undefined)
-        return res.status(400).json('Username, email or password missing');
+        return res.status(400).send({message: 'Username, email or password missing', status: 400});
     if(username.length < 4 || username.length > 20)
-        return res.status(400).json('Username must be between 4 and 20 characters');
+        return res.status(400).send({message: 'Username must be between 4 and 20 characters', status: 400});
 
     if (typeof (email) !== "string" || !validator.isEmail(email))
-        return res.status(400).json('Invalid email');
+        return res.status(400).send({message: 'Invalid email', status: 400});
 
     if (typeof (password) !== "string" || !validator.isStrongPassword(password))
-        return res.status(400).json('Password not strong enough, or invalid format');
+        return res.status(400).send({message: 'Password not strong enough, or invalid format', status: 400});
 
     //controllo se l'utente esiste già
     const existingUser = await User.findOne({ where: { [Sequelize.Op.or]: [{username: username}, {email: email}] }});
     if (existingUser) {
-        return res.status(400).json('Username or email already exists');
+        return res.status(400).send({message: 'Username or email already exists', status: 400});
     }
     const hash = await generatePasswordHash(password);
     try {
         //creazione utente
         const newUser = await User.create({username, email, password: hash});
         await newUser.save();
-        res.status(201).json('User created');
+        res.status(201).send({message: 'User created', status: 201});
 
     } catch (err) {
-        res.status(500).json('Error creating user');
+        res.status(500).send({error: 'Error creating user', status: 500});
     }
 }
 
@@ -51,21 +51,21 @@ exports.login = async (req, res) => {
     const {username, password} = req.body;
 
     if(password === undefined || password === '' || username === '' || username === undefined)
-        return res.status(400).json('Username or password missing');
+        return res.status(400).send({message: 'Username or password missing', status: 400});
 
     //controllo se l'username esiste
     const user = await User.findOne({where: { username: username}});
     if (!user)
-        return res.status(401).json('Invalid username or password');
+        return res.status(401).send({message: 'Invalid username or password', status: 401});
     //controllo se la password è corretta
     const isPasswordValid = await comparePassword(password, user.password);
     if(!isPasswordValid)
-        return res.status(401).json('Invalid username or password');
+        return res.status(401).send({message: 'Invalid username or password', status: 401});
 
     //genero i token con i dati dell'utente
     const accessToken = generateAccessToken({username: user.username, email: user.email});
     const refreshToken = generateRefreshToken({username: user.username, email: user.email});
-    return res.status(200).json({accessToken, refreshToken, message: "Login successfull"});
+    return res.status(200).send({accessToken, refreshToken, message: "Login successfull", status: 200});
 }
 /**
  * Logout of an existing user
@@ -77,11 +77,11 @@ exports.logout = async (req, res) => {
     //controllo se il token è presente
     const token = req.header('Authorization')?.split(' ')[1];
     if (!token)
-        return res.status(400).json('Token missing');
+        return res.status(400).send({message: 'Token missing', status: 400});
     const invalidatedToken = await invalidateAccessToken(token);
     if (!invalidatedToken)
-        return res.status(400).json('Invalid token');
-    return res.status(200).json('Logout successfull');
+        return res.status(400).send({message: 'Invalid token', status: 400});
+    return res.status(200).send({message: 'Logout successfull', status: 200});
 }
 
 /**
@@ -98,10 +98,10 @@ exports.getNonce = async (req, res) => {
 exports.protectedRoute = async (req, res) => {
     try {
         verifyAccessToken(req, res, async () => {
-                return res.status(200).json({message: 'Inside protected route', username: req.user.username,  status: 200});
+                return res.status(200).send({message: 'Inside protected route', username: req.user.username,  status: 200});
         });
     } catch (err) {
-        res.status(500).json('Error');
+        res.status(500).send({error: 'Error', status: 500});
     }
 }
 
@@ -114,10 +114,10 @@ exports.protectedRoute = async (req, res) => {
 exports.verifyRefreshToken = async (req, res) => {
     try{
         verifyRefreshToken(req, res, async () => {
-                return res.status(200).json({message:'Refresh token validated', username: req.user.username,  status: 200});
+                return res.status(200).send({message:'Refresh token validated', username: req.user.username,  status: 200});
         });
     } catch (err) {
-        res.status(500).json('Error');
+        res.status(500).send({error: 'Error', status: 500});
     }
 }
 
@@ -131,13 +131,13 @@ exports.invalidateRefreshToken = async (req, res) => {
     try{
         const refreshToken = req.header('Authorization')?.split(' ')[1];
         if (!refreshToken)
-            return res.status(400).json('Refresh token missing');
+            return res.status(400).send({message: 'Refresh token missing', status: 400});
         const invalidatedRefreshToken = await invalidateRefreshToken(refreshToken);
         if (!invalidatedRefreshToken)
-            return res.status(400).json('Invalid refresh token');
-        return res.status(200).json({message: 'Refresh token invalidated', status: 200});
+            return res.status(400).send({message: 'Invalid refresh token', status: 400});
+        return res.status(200).send({message: 'Refresh token invalidated', status: 200});
     } catch (err) {
-        res.status(500).json('Error');
+        res.status(500).send({error: 'Error', status: 500});
     }
 }
 
@@ -170,12 +170,11 @@ exports.generateNewTokens = async (req, res) => {
 exports.getAllUsers = async (req, res) => {
     try{
         const users = await User.findAll()
-        res.send(users)
+        res.status(200).json(users)
     } catch (err) {
-        res.status(500).send({ message: err.message })
+        res.status(500).send({error: 'Error', status: 500});
     }
 }
-
 
 //
 // exports.getUserByUsername = async (req, res) => {
