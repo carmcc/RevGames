@@ -3,6 +3,9 @@ const validator = require('validator')
 const { generatePasswordHash, comparePassword, generateNonceToken } = require('../utils/security')
 const Sequelize = require('sequelize')
 const {generateAccessToken, generateRefreshToken, verifyAccessToken, verifyRefreshToken, invalidateAccessToken, invalidateRefreshToken} = require('../authentication/jwt_auth');
+
+let association = [];//array che contiene le associazioni tra access token e refresh token di quel singolo utente
+
 /**
  * Registration of a new user
  * @param req
@@ -65,7 +68,10 @@ exports.login = async (req, res) => {
     //genero i token con i dati dell'utente
     const accessToken = generateAccessToken({username: user.username, email: user.email});
     const refreshToken = generateRefreshToken({username: user.username, email: user.email});
-    return res.status(200).send({accessToken, refreshToken, message: "Login successfull", status: 200});
+
+    association.push(accessToken, refreshToken);
+
+    return res.status(200).json({accessToken, refreshToken, message: "Login successfull"});
 }
 /**
  * Logout of an existing user
@@ -79,6 +85,10 @@ exports.logout = async (req, res) => {
     if (!token)
         return res.status(400).send({message: 'Token missing', status: 400});
     const invalidatedToken = await invalidateAccessToken(token);
+    await invalidateRefreshToken(getRefreshTokenByAccessToken(token));
+
+    deleteAssociation(token);//elimino l'associazione tra i due token
+
     if (!invalidatedToken)
         return res.status(400).send({message: 'Invalid token', status: 400});
     return res.status(200).send({message: 'Logout successfull', status: 200});
@@ -98,7 +108,7 @@ exports.getNonce = async (req, res) => {
 exports.protectedRoute = async (req, res) => {
     try {
         verifyAccessToken(req, res, async () => {
-                return res.status(200).send({message: 'Inside protected route', username: req.user.username,  status: 200});
+            return res.status(200).json({message: 'Inside protected route', username: req.user.username,  status: 200});
         });
     } catch (err) {
         res.status(500).send({error: 'Error', status: 500});
@@ -114,7 +124,7 @@ exports.protectedRoute = async (req, res) => {
 exports.verifyRefreshToken = async (req, res) => {
     try{
         verifyRefreshToken(req, res, async () => {
-                return res.status(200).send({message:'Refresh token validated', username: req.user.username,  status: 200});
+            return res.status(200).json({message:'Refresh token validated', username: req.user.username,  status: 200});
         });
     } catch (err) {
         res.status(500).send({error: 'Error', status: 500});
@@ -147,20 +157,29 @@ exports.invalidateRefreshToken = async (req, res) => {
  * @param res
  * @returns {Promise<*>} the new access token and refresh token
  */
-//TODO FIX
+//TODO TEST
 exports.generateNewTokens = async (req, res) => {
     try
 
     {
         verifyRefreshToken(req, res, async () => {
-            const newAccessToken = generateAccessToken({username: req.user.username, email: req.user.email});
-            const newRefreshToken = generateRefreshToken({username: req.user.username, email: req.user.email});
+                const newAccessToken = generateAccessToken({username: req.user.username, email: req.user.email});
+                const newRefreshToken = generateRefreshToken({username: req.user.username, email: req.user.email});
 
-            await invalidateRefreshToken(req.header('Authorization')?.split(' ')[1]);
-            await invalidateAccessToken(req.header('Authorization')?.split(' ')[1]);
-            return res.status(200).json({accessToken: newAccessToken, refreshToken: newRefreshToken, message: 'New refresh token generated', status: 200});
+                association.push(newAccessToken, newRefreshToken);
+                console.log("prima")
+                print()
 
-        }
+                deleteAssociation(getAccessTokenByRefreshToken(req.header('Authorization')?.split(' ')[1]));//delete old tokens
+
+                await invalidateRefreshToken(req.header('Authorization')?.split(' ')[1]);
+
+                console.log("dopo")
+                print()
+
+                return res.status(200).json({accessToken: newAccessToken, refreshToken: newRefreshToken, message: 'New refresh token generated', status: 200});
+
+            }
         );
     } catch (err) {
         res.status(500).json('Error');
@@ -176,15 +195,35 @@ exports.getAllUsers = async (req, res) => {
     }
 }
 
-//
-// exports.getUserByUsername = async (req, res) => {
-//     try {
-//         const user = await User.findOne({ username: req.params.username });
-//         if (!user) {
-//             return res.status(404).send({ message: 'User not found' });
-//         }
-//         res.send(user);
-//     } catch (err) {
-//         res.status(500).send({ message: err.message });
-//     }
-// };
+function getRefreshTokenByAccessToken(accessToken) {
+    for (let i = 0; i < association.length; i++) {
+        if (association[i] === accessToken) {
+            return association[i+1]; // return il refresh token
+        }
+    }
+    return null; // Access Token non trovato
+}
+
+function getAccessTokenByRefreshToken(refreshToken) {
+    for (let i = 0; i < association.length; i++) {
+        if (association[i] === refreshToken) {
+            return association[i-1];// return access token
+        }
+    }
+    return null; // refresh Token non trovato
+}
+
+function deleteAssociation(accessToken){
+    for (let i = 0; i < association.length; i++) {
+        if (association[i] === accessToken) {
+            association.splice(i, 2);
+        }
+    }
+}
+
+function print()
+{
+    for (let i = 0; i < association.length; i++) {
+        console.log(association[i]);
+    }
+}
