@@ -1,0 +1,104 @@
+<template>
+    <div class="game-form">
+        <h2>Inserisci un nuovo gioco</h2>
+        <form @submit.prevent="addGame">
+            <div class="form-group">
+                <label for="title">Titolo</label>
+                <input type="text" id="title" v-model="game.title" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Descrizione</label>
+                <textarea id="description" v-model="game.description" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="rating">Valutazione</label>
+                <input type="number" id="rating" v-model="game.rating" min="1" max="5" required>
+            </div>
+            <div class="form-group">
+                <label for="url">URL</label>
+                <input type="text" id="url" v-model="game.url" required>
+            </div>
+            <button type="submit">Aggiungi gioco</button>
+        </form>
+    </div>
+</template>
+
+<script>
+import axios from "@/axios";
+
+export default {
+    name: "AddGame",
+    data() {
+        return {
+            game: {
+                title: '',
+                description: '',
+                rating: null,
+                url: '',
+            },
+        };
+    },
+    methods: {
+        async addGame() {
+            // Esegui qui la logica per l'inserimento del gioco nel tuo backend, ad esempio una chiamata API
+            // Utilizza this.game per accedere ai dati del gioco da inviare al backend
+            await axios.post('/games/addGame', {
+                title: this.game.title,
+                description: this.game.description,
+                rating: this.game.rating,
+                url: this.game.url
+            });
+
+            // Dopo l'inserimento, puoi ripulire il form reimpostando i valori
+            this.game.title = '';
+            this.game.description = '';
+            this.game.rating = null;
+            this.game.url = '';
+        },
+    },
+};
+</script>
+
+<style scoped>
+.game-form {
+    max-width: 400px;
+    margin:150px auto;
+    //margin: 0 auto;
+    padding: 20px;
+    background-color: #f5f5f5;
+    border-radius: 5px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+}
+
+input[type="text"],
+textarea,
+input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+</style>
