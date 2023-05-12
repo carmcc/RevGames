@@ -1,7 +1,6 @@
 <template>
   <nav class="navbar navbar-dark bg-dark fixed-top">
     <div class="container-fluid">
-<!--      <a class="navbar-brand" href="#">RevGames</a>-->
         <a class="navbar-brand" href="#">
             <img src="/favicon.ico" alt="RevGames logo" width="40" height="40" style="border-radius: 50%; border: 2px solid rgba(255, 255, 255, 0.5); background-color: black;">
             RevGames
@@ -19,31 +18,31 @@
             <li class="nav-item">
               <a class="nav-link active" aria-current="page"><router-link to="/">Home</router-link></a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link"><router-link to="/signup" v-if="!isLogged">SignUp</router-link></a>
+            <li class="nav-item" v-if="!isLogged">
+              <a class="nav-link"><router-link to="/signup">SignUp</router-link></a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link"><router-link to="/signin" v-if="!isLogged">SignIn</router-link></a>
+            <li class="nav-item" v-if="!isLogged">
+              <a class="nav-link"><router-link to="/signin">SignIn</router-link></a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link"><router-link to="/logout" v-if="isLogged">Logout</router-link></a>
+            <li class="nav-item" v-if="isLogged">
+              <a class="nav-link"><router-link to="/logout">Logout</router-link></a>
             </li>
 <!--            <li class="nav-item">-->
 <!--              <router-link to="/profile">Profile</router-link>-->
 <!--            </li>-->
-<!--            <li class="nav-item dropdown">-->
-<!--              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">-->
-<!--                Dropdown-->
-<!--              </a>-->
-<!--              <ul class="dropdown-menu dropdown-menu-dark">-->
-<!--                <li><a class="dropdown-item" href="#">Action</a></li>-->
-<!--                <li><a class="dropdown-item" href="#">Another action</a></li>-->
-<!--                <li>-->
-<!--                  <hr class="dropdown-divider">-->
-<!--                </li>-->
-<!--                <li><a class="dropdown-item" href="#">Something else here</a></li>-->
-<!--              </ul>-->
-<!--            </li>-->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Dropdown
+              </a>
+              <ul class="dropdown-menu dropdown-menu-dark">
+                <li><a class="dropdown-item" href="#">Action</a></li>
+                <li><a class="dropdown-item" href="#">Another action</a></li>
+                <li>
+                  <hr class="dropdown-divider">
+                </li>
+                <li><a class="dropdown-item" href="#">Something else here</a></li>
+              </ul>
+            </li>
           </ul>
 <!--          <form class="d-flex mt-3" role="search">-->
 <!--            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">-->
