@@ -12,7 +12,7 @@
 <!--        <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Features</a></li>-->
 <!--        <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Pricing</a></li>-->
 <!--        <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">FAQs</a></li>-->
-        <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">About</a></li>
+          <li class="nav-item"><a><router-link to="/about" class="nav-link px-2 text-muted">About</router-link></a></li>
       </ul>
     </footer>
   </div>
