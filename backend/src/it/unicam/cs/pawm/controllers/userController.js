@@ -157,7 +157,6 @@ exports.invalidateRefreshToken = async (req, res) => {
  * @param res
  * @returns {Promise<*>} the new access token and refresh token
  */
-//TODO TEST
 exports.generateNewTokens = async (req, res) => {
     try
 
@@ -167,17 +166,12 @@ exports.generateNewTokens = async (req, res) => {
                 const newRefreshToken = generateRefreshToken({username: req.user.username, email: req.user.email});
 
                 association.push(newAccessToken, newRefreshToken);
-                console.log("prima")
-                print()
 
                 deleteAssociation(getAccessTokenByRefreshToken(req.header('Authorization')?.split(' ')[1]));//delete old tokens
 
                 await invalidateRefreshToken(req.header('Authorization')?.split(' ')[1]);
 
-                console.log("dopo")
-                print()
-
-                return res.status(200).json({accessToken: newAccessToken, refreshToken: newRefreshToken, message: 'New refresh token generated', status: 200});
+                return res.status(200).json({accessToken: newAccessToken, refreshToken: newRefreshToken, message: 'New refresh and access token generated', status: 200});
 
             }
         );
@@ -218,12 +212,5 @@ function deleteAssociation(accessToken){
         if (association[i] === accessToken) {
             association.splice(i, 2);
         }
-    }
-}
-
-function print()
-{
-    for (let i = 0; i < association.length; i++) {
-        console.log(association[i]);
     }
 }
