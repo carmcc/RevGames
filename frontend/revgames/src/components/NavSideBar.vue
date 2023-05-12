@@ -3,7 +3,7 @@
     <div class="container-fluid">
         <a class="navbar-brand" href="#">
             <img src="/favicon.ico" alt="RevGames logo" width="40" height="40" style="border-radius: 50%; border: 2px solid rgba(255, 255, 255, 0.5); background-color: black;">
-            RevGames
+          <router-link to="/">RevGames</router-link>
         </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
