@@ -1,6 +1,6 @@
 <template>
-  <form @submit.prevent="registerUser">
-    <h1 class="h3 mb-3 font-weight-normal">Please sign up</h1>
+  <form  @submit.prevent="registerUser">
+    <h1 class="h3 mb-3 font-weight-normal animate__animated animate__fadeInUp animate__delay-0.5s">Please sign up</h1>
       <div>
         <label>Username:</label>
         <input type="text" v-model="username" required>

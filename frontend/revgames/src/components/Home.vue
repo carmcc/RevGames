@@ -11,8 +11,8 @@
 <!--    </section>-->
     <section class="jumbotron text-center" style="background-image: url('./codmw.jpeg');">
         <div class="container">
-            <h1 class="jumbotron-heading">Benvenuto/a {{username}}</h1>
-            <p class="lead text-muted">Something short and leading about the collection below—its contents, the creator, etc. Make it short and sweet, but not too short so folks don't simply skip over it entirely.</p>
+            <h1 class="jumbotron-heading animate__animated animate__fadeInUp animate__delay-0.5s">Benvenuto/a {{username}}</h1>
+            <p class="lead text-muted animate__animated animate__fadeInUp animate__delay-1s">Something short and leading about the collection below—its contents, the creator, etc. Make it short and sweet, but not too short so folks don't simply skip over it entirely.</p>
             <p>
                 <a href="#" class="btn btn-primary my-2">Main call to action</a>
                 <a href="#" class="btn btn-secondary my-2">Secondary action</a>
@@ -20,10 +20,10 @@
         </div>
     </section>
 
-    <div class="album py-5 bg-light">
+    <div class="album py-5 bg-light animate__animated animate__fadeInUp animate__delay-1s">
       <div class="container">
 
-        <div class="row">
+        <div class="row animate__animated animate__fadeInUp animate__delay-1s">
           <CardGame/>
           <CardGame/>
           <CardGame/>
