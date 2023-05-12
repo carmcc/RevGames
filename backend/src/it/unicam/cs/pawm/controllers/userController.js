@@ -34,7 +34,7 @@ exports.register = async (req, res) => {
     const hash = await generatePasswordHash(password);
     try {
         //creazione utente
-        const newUser = await User.create({username, email, password: hash});
+        const newUser = await User.create({username, email, password: hash, isAdmin: req.body.isAdmin});
         await newUser.save();
         res.status(201).send({message: 'User created', status: 201});
 
