@@ -1,5 +1,5 @@
 <template>
-    <section class="jumbotron text-center" style="background-image: url('./codmw.jpeg');">
+    <section class="jumbotron text-center">
         <div class="container">
             <h1 class="jumbotron-heading animate__animated animate__fadeInUp animate__delay-0.5s">Benvenuto/a {{username}}</h1>
             <p class="lead text-muted animate__animated animate__fadeInUp animate__delay-1s">Something short and leading about the collection below—its contents, the creator, etc. Make it short and sweet, but not too short so folks don't simply skip over it entirely.</p>
@@ -68,8 +68,7 @@ axios.get('/games/myGames')
   padding-top: var(--jumbotron-padding-y);
   padding-bottom: var(--jumbotron-padding-y);
   margin-bottom: 0;
-  background-color: #fff;
-}
+  background-image: url('../assets/codmw.jpeg');}
 @media (min-width: 768px) {
   .jumbotron {
     padding-top: calc(var(--jumbotron-padding-y) * 2);
