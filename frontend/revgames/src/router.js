@@ -5,15 +5,17 @@ import Logout from "@/components/Logout.vue";
 import ErrorPage from "@/components/ErrorPage.vue";
 import About from "@/components/About.vue";
 import AddGame from "@/components/AddGame.vue";
+import GameReview from "@/components/GameReview.vue";
 import { createRouter, createWebHistory } from "vue-router";
 
-const allowedRoutes = ["/", "/signup", "/signin", "/logout", "/error", "/about", "/addGame"];
+const allowedRoutes = ["", "signup", "signin", "logout", "error", "about", "addGame", `gameReview`];  //funziona anche senza... bah...
 
 const routes = [
     {
         name: "SignUp",
         component: SignUp,
         path: "/signup",
+        props: false,
         meta: {
             hideNavbar: false
         }
@@ -22,6 +24,7 @@ const routes = [
         name: "Home",
         component: Home,
         path: "/",
+        props: false,
         meta: {
             hideNavbar: false
         }
@@ -30,6 +33,7 @@ const routes = [
         name: "SignIn",
         component: SignIn,
         path: "/signin",
+        props: false,
         meta: {
             hideNavbar: false
         }
@@ -38,6 +42,7 @@ const routes = [
         name: "Logout",
         component: Logout,
         path: "/logout",
+        props: false,
         meta: {
             hideNavbar: false
         }
@@ -46,6 +51,7 @@ const routes = [
         name: "ErrorPage",
         component: ErrorPage,
         path: "/error",
+        props: false,
         meta: {
             hideNavbar: true
         }
@@ -54,6 +60,7 @@ const routes = [
         name: "About",
         component: About,
         path: "/about",
+        props: false,
         meta: {
             hideNavbar: false
         }
@@ -62,6 +69,16 @@ const routes = [
         name: "AddGame",
         component: AddGame,
         path: "/addGame",
+        props: false,
+        meta: {
+            hideNavbar: false
+        }
+    },
+    {
+        name: "GameReview",
+        component: GameReview,
+        path: `/gameReview/:receivedId`,
+        props: true,
         meta: {
             hideNavbar: false
         }
@@ -74,11 +91,10 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    if (allowedRoutes.includes(to.path)) {
+    let path = to.path.split("/")[1];       //TODO discutere dell'implementazione
+    if (allowedRoutes.includes(path))
         next();
-    } else {
-        next({ name: "ErrorPage" });
-    }
+    next({ name: "ErrorPage" });
 });
 
 export default router;

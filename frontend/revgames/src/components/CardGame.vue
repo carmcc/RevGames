@@ -35,7 +35,7 @@ export default {
     },
   methods: {
     navigateToGame() {
-      this.$router.push(`/signup`);
+      this.$router.push(`/gameReview/${this.card.id}`);
     }
   }
 }
