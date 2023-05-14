@@ -21,8 +21,8 @@
 </template>
 
 <script>
-import axios from "@/axios";
-import CardGame from './CardGame.vue'; // Importa il componente CardGame
+import CardGame from './CardGame.vue';
+import instance from "@/axios"; // Importa il componente CardGame
 
 export default {
     name: 'HomePage',
@@ -42,7 +42,7 @@ export default {
     mounted() {
 // Chiama la tua API sul backend per ottenere i capi delle carte
 // Esempio di chiamata API usando axios:
-axios.get('/games/myGames')
+instance.get('/games/myGames')
   .then(response => {
     this.cardLeaders = response.data;
   })
@@ -51,9 +51,13 @@ axios.get('/games/myGames')
   });
     },
     async created() {
-        const response = await axios.get('api/protected');
-        this.$store.dispatch('checkLogin', {username: response.data.username});
-        console.log(response);
+        try {
+            const response = await instance.get('api/protected');
+            if(response.status === 200)
+                this.$store.dispatch('checkLogin', {username: response.data.username});
+        } catch (error) {
+            console.log(error.message);
+        }
     },
 };
 </script>
@@ -88,5 +92,5 @@ axios.get('/games/myGames')
   max-width: 40rem;
 }
 
-.box-shadow { box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05); }
+//.box-shadow { box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05); }
 </style>
