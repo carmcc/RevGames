@@ -66,7 +66,7 @@ const routes = [
     {
         name: "GameReview",
         component: GameReview,
-        path: "/gameReview/:receivedId",
+        path: `/gameReview/:receivedGameId`,
         props: true,
         meta: {
             hideNavbar: false,
@@ -78,9 +78,18 @@ const routes = [
         path: "/:catchAll(.*)", // Definizione della rotta per la pagina di errore 404
         props: false,
         meta: {
-            hideNavbar: true,
-        },
+            hideNavbar: false
+        }
     },
+    // {
+    //     name: "GameReviewForSingleUser",
+    //     component: GameReview,
+    //     path: `/gameReview/:receivedGameId/:receivedUserId`,     //TODO da implementare
+    //     props: true,
+    //     meta: {
+    //         hideNavbar: false
+    //     }
+    // }
 ];
 
 const router = createRouter({

@@ -1,30 +1,71 @@
+<!--<template>-->
+<!--  <div class="col-md-4">-->
+<!--    <div class="review-body">-->
+<!--      <P class="review-body">{{nomeUtente}} {{review.rating}}/5</p>-->
+<!--      <p class="review-text">{{ review.description }}</p>-->
+<!--      <div class="d-flex justify-content-between align-items-center">-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</template>-->
 <template>
   <div class="col-md-4">
-    <div class="review-body">
-      <P class="review-body">{{review.id}}</p>
-      <p class="review-text">{{ review.description }}</p>
-      <div class="d-flex justify-content-between align-items-center">
+    <div class="review-box">
+      <div class="review-body">
+        <p class="review-header">
+          <b>{{nomeUtente}}</b>&nbsp;&nbsp;&nbsp;&nbsp;{{review.rating}}/5
+        </p>
+        <p class="review-text">{{review.description}}</p>
+        <div class="d-flex justify-content-between align-items-center">
+        </div>
       </div>
     </div>
   </div>
 </template>
 
+<style>
+.review-box {
+  background-color: #f1f1f1;
+  border: 1px solid #000;
+  padding: 10px;
+}
+.review-header {
+  margin-bottom: 10px;
+}
+</style>
+
+
 <script>
-//let nomeUtente = axios.get(``); //TODO aggiungi la possibilità di vedere gli autori dei commenti
+import instance from "@/axios";
 export default {
     name: "ReviewComponent",
+  methods: {instance},
     props: {
       review: {
         type: Object,
         required: true
       }
     },
-  computed: {
-    cardImageUrl() {
-      return require(`../assets/${this.card.url}`);
-    }
+    data() {
+    return {
+      nomeUtente : "account non più esistente"
+    };
+  },
+  created() {
+    instance.get(`/users/usernameById/${this.review.userId}`)
+        .then(response => {
+          this.nomeUtente = response.data;
+        })
+        .catch(error => {
+          console.error(error);
+        });
   }
-  }
+
+
+//   mounted() {
+//     this.nomeUtente = instance.get(`/users/usernameById/${this.review.userId}`)
+//   }
+}
 </script>
 
 <style scoped>
