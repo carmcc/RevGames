@@ -21,7 +21,7 @@
 <!--        <input type="checkbox" value="remember-me"> Remember me-->
 <!--      </label>-->
 <!--    </div>-->
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>
+    <button class="btn btn-lg btn-primary btn-block" type="submit" :disabled="isSubmitting">Sign up</button>
   </form>
 </template>
 
@@ -29,25 +29,32 @@
 import axios from '../axios';
 
 export default {
-  name: 'SignUp',
-  data() {
-    return {
-      username: '',
-      email: '',
-      password: ''
+    name: 'SignUp',
+    data() {
+        return {
+            username: '',
+            email: '',
+            password: '',
+            isSubmitting: false
+        }
+    },
+    methods: {
+        async registerUser() {
+            this.isSubmitting = true;
+            try {
+                await axios.post('auth/register', {
+                    username: this.username,
+                    email: this.email,
+                    password: this.password
+                });
+                this.$router.push('/signin');
+            } catch (error) {
+                console.log(error);
+            } finally {
+                this.isSubmitting = false;
+            }
+        }
     }
-  },
-  methods: {
-    async registerUser() {
-      await axios.post('auth/register', {
-        username: this.username,
-        email: this.email,
-        password: this.password
-      });
-      this.$router.push('/signin');
-
-    }
-  }
 }
 </script>
 
