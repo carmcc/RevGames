@@ -18,34 +18,42 @@
     <!--        <input type="checkbox" value="remember-me"> Remember me-->
     <!--      </label>-->
     <!--    </div>-->
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+    <button class="btn btn-lg btn-primary btn-block" type="submit" :disabled="isSubmitting">Sign in</button>
   </form>
 </template>
 
 <script>
 import axios from '../axios';
 export default {
-  name: 'SignIn',
-  data() {
-    return {
-      username: '',
-      password: ''
+    name: 'SignIn',
+    data() {
+        return {
+            username: '',
+            password: '',
+            isSubmitting: false
+        }
+    },
+    methods: {
+        async loginUser() {
+            this.isSubmitting = true;
+            try {
+                const response = await axios.post('auth/login', {
+                    username: this.username,
+                    password: this.password
+                });
+                this.$store.dispatch('login', {
+                    accessToken: response.data.accessToken,
+                    refreshToken: response.data.refreshToken,
+                    username: this.username
+                })
+                this.$router.push('/');
+            } catch (error) {
+                console.log(error);
+            } finally {
+                this.isSubmitting = false;
+            }
+        }
     }
-  },
-  methods: {
-    async loginUser() {
-      const response = await axios.post('auth/login', {
-        username: this.username,
-        password: this.password
-      });
-      this.$store.dispatch('login', {
-        accessToken: response.data.accessToken,
-        refreshToken: response.data.refreshToken,
-        username: this.username
-      })
-      this.$router.push('/');
-    }
-  }
 }
 </script>
 
