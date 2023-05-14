@@ -9,7 +9,7 @@ let invalidToken = [];
  * @returns {*} the access token
  */
 function generateAccessToken(payload) {
-    return jwt_auth.sign(payload, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '1h'});
+    return jwt_auth.sign(payload, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '30s'});
 }
 
 /**
@@ -18,7 +18,7 @@ function generateAccessToken(payload) {
  * @returns {*} the refresh token
  */
 function generateRefreshToken(payload) {
-    return jwt_auth.sign(payload, process.env.REFRESH_TOKEN_SECRET, {expiresIn: '15d'});
+    return jwt_auth.sign(payload, process.env.REFRESH_TOKEN_SECRET, {expiresIn: '1m'});
 }
 
 /**
@@ -89,11 +89,12 @@ async function invalidateAccessToken(token) {
         if(!invalidToken.includes(token))
             invalidToken.push(token);
         //senza return true, il metodo non si conclude e non viene invalidato il token
-        return true;
+        // return true;
     } catch (error) {
-        console.error("Error invalidating token: ", error);
-        return false;
+        console.log("Error invalidating token: " + error);
+        // return false;
     }
+    return true;
 }
 
 /**

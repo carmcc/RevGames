@@ -12,8 +12,12 @@ export default {
   },
   methods: {
     async logoutUser() {
-      await axios.post('/auth/logout');
-      this.$store.dispatch('logout');
+        try{
+            await axios.post('/auth/logout');
+            this.$store.dispatch('logout');
+        } catch (error) {
+            console.log("Utente non autorizzato token non trovato:"+error.message);
+        }
       this.$router.push('/');
     }
   }

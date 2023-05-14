@@ -84,13 +84,13 @@ exports.logout = async (req, res) => {
     const token = req.header('Authorization')?.split(' ')[1];
     if (!token)
         return res.status(400).send({message: 'Token missing', status: 400});
-    const invalidatedToken = await invalidateAccessToken(token);
+    await invalidateAccessToken(token);
     await invalidateRefreshToken(getRefreshTokenByAccessToken(token));
 
     deleteAssociation(token);//elimino l'associazione tra i due token
 
-    if (!invalidatedToken)
-        return res.status(400).send({message: 'Invalid token', status: 400});
+    // if (!invalidatedToken)
+    //     return res.status(400).send({message: 'Invalid token', status: 400});
     return res.status(200).send({message: 'Logout successfull', status: 200});
 }
 
