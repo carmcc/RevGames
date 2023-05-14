@@ -1,4 +1,4 @@
-import SignUp  from "@/components/SignUp.vue";
+import SignUp from "@/components/SignUp.vue";
 import Home from "@/components/Home.vue";
 import SignIn from "@/components/SignIn.vue";
 import Logout from "@/components/Logout.vue";
@@ -8,8 +8,6 @@ import AddGame from "@/components/AddGame.vue";
 import GameReview from "@/components/GameReview.vue";
 import { createRouter, createWebHistory } from "vue-router";
 
-const allowedRoutes = ["", "signup", "signin", "logout", "error", "about", "addGame", `gameReview`];  //funziona anche senza... bah...
-
 const routes = [
     {
         name: "SignUp",
@@ -17,8 +15,8 @@ const routes = [
         path: "/signup",
         props: false,
         meta: {
-            hideNavbar: false
-        }
+            hideNavbar: false,
+        },
     },
     {
         name: "Home",
@@ -26,8 +24,8 @@ const routes = [
         path: "/",
         props: false,
         meta: {
-            hideNavbar: false
-        }
+            hideNavbar: false,
+        },
     },
     {
         name: "SignIn",
@@ -35,8 +33,8 @@ const routes = [
         path: "/signin",
         props: false,
         meta: {
-            hideNavbar: false
-        }
+            hideNavbar: false,
+        },
     },
     {
         name: "Logout",
@@ -44,17 +42,8 @@ const routes = [
         path: "/logout",
         props: false,
         meta: {
-            hideNavbar: false
-        }
-    },
-    {
-        name: "ErrorPage",
-        component: ErrorPage,
-        path: "/error",
-        props: false,
-        meta: {
-            hideNavbar: true
-        }
+            hideNavbar: false,
+        },
     },
     {
         name: "About",
@@ -62,8 +51,8 @@ const routes = [
         path: "/about",
         props: false,
         meta: {
-            hideNavbar: false
-        }
+            hideNavbar: false,
+        },
     },
     {
         name: "AddGame",
@@ -71,30 +60,32 @@ const routes = [
         path: "/addGame",
         props: false,
         meta: {
-            hideNavbar: false
-        }
+            hideNavbar: false,
+        },
     },
     {
         name: "GameReview",
         component: GameReview,
-        path: `/gameReview/:receivedId`,
+        path: "/gameReview/:receivedId",
         props: true,
         meta: {
-            hideNavbar: false
-        }
-    }
+            hideNavbar: false,
+        },
+    },
+    {
+        name: "ErrorPage",
+        component: ErrorPage,
+        path: "/:catchAll(.*)", // Definizione della rotta per la pagina di errore 404
+        props: false,
+        meta: {
+            hideNavbar: true,
+        },
+    },
 ];
 
 const router = createRouter({
     history: createWebHistory(),
     routes,
-});
-
-router.beforeEach((to, from, next) => {
-    let path = to.path.split("/")[1];       //TODO discutere dell'implementazione
-    if (allowedRoutes.includes(path))
-        next();
-    next({ name: "ErrorPage" });
 });
 
 export default router;
