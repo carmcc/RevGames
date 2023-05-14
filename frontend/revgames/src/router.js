@@ -6,86 +6,126 @@ import ErrorPage from "@/components/ErrorPage.vue";
 import About from "@/components/About.vue";
 import AddGame from "@/components/AddGame.vue";
 import GameReview from "@/components/GameReview.vue";
+import AddReview from "@/components/AddReview.vue";
 import { createRouter, createWebHistory } from "vue-router";
+import store from './store.js';
 
-const routes = [
-    {
-        name: "SignUp",
-        component: SignUp,
-        path: "/signup",
-        props: false,
-        meta: {
-            hideNavbar: false,
-        },
-    },
-    {
-        name: "Home",
-        component: Home,
-        path: "/",
-        props: false,
-        meta: {
-            hideNavbar: false,
-        },
-    },
-    {
-        name: "SignIn",
-        component: SignIn,
-        path: "/signin",
-        props: false,
-        meta: {
-            hideNavbar: false,
-        },
-    },
-    {
-        name: "Logout",
-        component: Logout,
-        path: "/logout",
-        props: false,
-        meta: {
-            hideNavbar: false,
-        },
-    },
-    {
-        name: "About",
-        component: About,
-        path: "/about",
-        props: false,
-        meta: {
-            hideNavbar: false,
-        },
-    },
-    {
-        name: "AddGame",
-        component: AddGame,
-        path: "/addGame",
-        props: false,
-        meta: {
-            hideNavbar: false,
-        },
-    },
-    {
-        name: "GameReview",
-        component: GameReview,
-        path: "/gameReview/:receivedId",
-        props: true,
-        meta: {
-            hideNavbar: false,
-        },
-    },
-    {
-        name: "ErrorPage",
-        component: ErrorPage,
-        path: "/:catchAll(.*)", // Definizione della rotta per la pagina di errore 404
-        props: false,
-        meta: {
-            hideNavbar: true,
-        },
-    },
-];
+let isUserLogged= false
 
 const router = createRouter({
     history: createWebHistory(),
-    routes,
+    routes: [
+        {
+            name: "SignUp",
+            component: SignUp,
+            path: "/signup",
+            props: false,
+            meta: {
+                hideNavbar: false,
+                isAuthRequired: false,
+            },
+        },
+        {
+            name: "Home",
+            component: Home,
+            path: "/",
+            props: false,
+            meta: {
+                hideNavbar: false,
+                isAuthRequired: false,
+            },
+        },
+        {
+            name: "SignIn",
+            component: SignIn,
+            path: "/signin",
+            props: false,
+            meta: {
+                hideNavbar: false,
+                isAuthRequired: false,
+            },
+        },
+        {
+            name: "Logout",
+            component: Logout,
+            path: "/logout",
+            props: false,
+            meta: {
+                hideNavbar: false,
+                isAuthRequired: true,
+            },
+        },
+        {
+            name: "About",
+            component: About,
+            path: "/about",
+            props: false,
+            meta: {
+                hideNavbar: false,
+                isAuthRequired: false,
+            },
+        },
+        {
+            name: "AddGame",
+            component: AddGame,
+            path: "/addGame",
+            props: false,
+            meta: {
+                hideNavbar: false,
+                isAuthRequired: true,
+            },
+        },
+        {
+            name: "GameReview",
+            component: GameReview,
+            path: "/gameReview/:receivedId",
+            props: true,
+            meta: {
+                hideNavbar: false,
+                isAuthRequired: false,
+            },
+        },
+        {
+            name: "ErrorPage",
+            component: ErrorPage,
+            path: "/:catchAll(.*)", // Definizione della rotta per la pagina di errore 404
+            props: false,
+            meta: {
+                hideNavbar: true,
+                isAuthRequired: false,
+
+            },
+        },
+        {
+            name: "AddReview",
+            component: AddReview,
+            path: "/addReview",
+            props: false,
+            meta: {
+                hideNavbar: false,
+                isAuthRequired: true,
+            },
+        },
+
+    ]
 });
+
+router.beforeEach((to, from, next) => {
+    checkLogin();
+    if (to.meta.isAuthRequired) {
+        if(isUserLogged) {
+            next();
+        }else{
+            next("/signin");
+        }
+    } else {
+        next();
+    }
+});
+
+function checkLogin() {
+    isUserLogged = store.state.isLogged;
+}
+
 
 export default router;
