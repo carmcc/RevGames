@@ -8,7 +8,7 @@ import AddGame from "@/components/AddGame.vue";
 import GameReview from "@/components/GameReview.vue";
 import { createRouter, createWebHistory } from "vue-router";
 
-const allowedRoutes = ["", "signup", "signin", "logout", "error", "about", "addGame", `gameReview`];  //funziona anche senza... bah...
+const allowedRoutes = ["", "signup", "signin", "logout", "error", "about", "addGame", `gameReview`];
 
 const routes = [
     {
@@ -77,12 +77,21 @@ const routes = [
     {
         name: "GameReview",
         component: GameReview,
-        path: `/gameReview/:receivedId`,
+        path: `/gameReview/:receivedGameId`,
         props: true,
         meta: {
             hideNavbar: false
         }
-    }
+    },
+    // {
+    //     name: "GameReviewForSingleUser",
+    //     component: GameReview,
+    //     path: `/gameReview/:receivedGameId/:receivedUserId`,     //TODO da implementare
+    //     props: true,
+    //     meta: {
+    //         hideNavbar: false
+    //     }
+    // }
 ];
 
 const router = createRouter({
@@ -94,7 +103,8 @@ router.beforeEach((to, from, next) => {
     let path = to.path.split("/")[1];       //TODO discutere dell'implementazione
     if (allowedRoutes.includes(path))
         next();
-    next({ name: "ErrorPage" });
+    else
+        next({ name: "ErrorPage" });
 });
 
 export default router;

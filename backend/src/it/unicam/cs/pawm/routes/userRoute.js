@@ -10,6 +10,8 @@ router.post('/auth/invalidate-refreshToken', userController.invalidateRefreshTok
 router.get('/get-nonce', userController.getNonce)
 router.get('/api/protected', userController.protectedRoute)
 router.get('/users/allUsers', userController.getAllUsers)
+router.get(`/users/usernameById/:userId`, userController.getUserNameById)
+// router.get(`/users/prova`, userController.getUserIdByUsername)
 router.get('/verify-refreshToken', userController.verifyRefreshToken)
 router.get('/new-refreshToken', userController.generateNewTokens)
 // router.get('/users/username', userController.getUserByUsername)
