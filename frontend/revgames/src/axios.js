@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Creazione di un'istanza di Axios
 const instance = axios.create({
-    baseURL: 'http://localhost:3000/',
+    baseURL: 'https://localhost:3000/',
 });
 instance.flag = true;
 // Interceptor delle richieste
