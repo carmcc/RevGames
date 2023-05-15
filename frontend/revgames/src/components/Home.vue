@@ -13,7 +13,7 @@
     <div class="album py-5 bg-light animate__animated animate__fadeInUp animate__delay-1s">
         <div class="container">
             <div class="row animate__animated animate__fadeInUp animate__delay-1s">
-                <CardGame v-for="card in cardLeaders" :key="card.id" :card="card" :title="card.title" :description="card.description" :rating="card.rating" :url="card.url" />
+                <CardGame v-for="card in cardLeaders" :key="card.id" :card="card"/>
             </div>
         </div>
     </div>

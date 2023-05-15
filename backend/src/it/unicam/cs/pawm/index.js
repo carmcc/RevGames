@@ -2,13 +2,13 @@ const express = require('express')
 const cors = require('cors')
 const fs = require('fs')
 const path = require('path')
-const https = require('https')
+// const https = require('https')
 const app = express()
 
-const options = {
-    key: fs.readFileSync(path.join(__dirname, 'cert', 'key.pem')),
-    cert: fs.readFileSync(path.join(__dirname, 'cert', 'cert.pem'))
-}
+// const options = {
+//     key: fs.readFileSync(path.join(__dirname, 'cert', 'key.pem')),
+//     cert: fs.readFileSync(path.join(__dirname, 'cert', 'cert.pem'))
+// }
 const userRoutes = require('./routes/userRoute')
 const gameRoutes = require('./routes/gameRoute')
 const reviewRoutes = require('./routes/reviewRoute')
@@ -38,7 +38,8 @@ db.sync()
 });
 
 const port = process.env.PORT || 3000
-https.createServer(options, app).listen(port, () => console.log(`Https server listening on port ${port}`))
+// https.createServer(options, app).listen(port, () => console.log(`Https server listening on port ${port}`))
+app.listen(port, () => console.log(`Http server listening on port ${port}`))
 
 
 

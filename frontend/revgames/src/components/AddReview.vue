@@ -75,7 +75,6 @@ export default {
             this.review.content = '';
             this.characterCount = 0;
         }
-
     }
 };
 </script>
