@@ -86,6 +86,16 @@ const router = createRouter({
             },
         },
         {
+            name: "GameReviewForLoggedUsers",
+            component: GameReview,
+            path: "/gameReview/:receivedGameId/:receivedUserId",
+            props: true,
+            meta: {
+                hideNavbar: false,
+                isAuthRequired: false, //TODO non riesco ad accedere alla pagina (quindi l'ho impostato a false anche se non dovrebbe)
+            },
+        },
+        {
             name: "ErrorPage",
             component: ErrorPage,
             path: "/:catchAll(.*)", // Definizione della rotta per la pagina di errore 404

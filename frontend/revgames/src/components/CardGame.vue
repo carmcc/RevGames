@@ -8,7 +8,7 @@
 <!--        <router-link to="/signup">Play</router-link>-->
         <div class="d-flex justify-content-between align-items-center">
           <div class="btn-group">
-            <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
+            <button type="button" class="btn btn-sm btn-outline-secondary" @click="navigateToGameReviewsForLoggedUser">View</button>
             <button type="button" class="btn btn-sm btn-outline-secondary"
                     @click="navigateToUserReviews" style="cursor: pointer">Edit</button>
           </div>
@@ -38,9 +38,8 @@ export default {
     navigateToGameReviews() {
       this.$router.push(`/gameReview/${this.card.id}`);
     },
-    // navigateToUserReviews() {
-    //   this.$store.state.username
-    //   this.$router.push(`/gameReview/${this.card.id}/${this}`)  //TODO da implementare
+    // navigateToGameReviewsForLoggedUser() {
+    //   this.$router.push(`/gameReview/${this.card.id}/${idDellUtente}`); //TODO estrazione dell'ID utente dall'accessToken
     // }
   }
 }

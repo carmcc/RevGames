@@ -27,10 +27,10 @@ export default {
             type: String,
             required: true,
         },
-        // receivedUserId: {   //this.receivedUserId è l'id dell'utente loggato
-        //   Type: String,
-        //   required: false    //TODO da implementare
-        // }
+        receivedUserId: {   //this.receivedUserId è l'id dell'utente loggato
+          Type: String,
+          required: false
+        }
     },
     components: {
         ReviewComponent,
@@ -38,7 +38,7 @@ export default {
     data() {
         return {
             reviewList: [], // Inizializza un array vuoto per le recensioni
-            game: {
+            game: {   //game serve per il titolo e l'immagine del gioco
                 bannerImageUrl: "",
                 description: "",
                 title: "",
@@ -46,28 +46,44 @@ export default {
         };
     },
     computed: {
-        cardBannerUrl() {
+        cardBannerUrl() {   //effettiva estrazione dell'immagine dai file locali
             return require(`../assets/${this.game.bannerImageUrl}`);
         }
     },
-    created() {
+    created() {   //effettiva estrazione dei dati dal database
         instance.get(`/games/getGameById/${this.receivedGameId}`)
             .then(response => {
-                this.game.title = response.data.title;
-                this.game.bannerImageUrl = response.data.url;
-                this.game.description = response.data.description;
+              this.game.title = response.data.title;
+              this.game.bannerImageUrl = response.data.url;
+              this.game.description = response.data.description;
             }).catch(error => {
-            console.error(error);
+          console.error(error);
         });
     },
     mounted() {
-        instance.get(`/review/allReviewsOfGame/${this.receivedGameId}`)   //Chiamata all'API del backend per ottenere le recensioni
+      if(this.receivedUserId==null) {   //se non è stato passato un userID, allora l'utente non è loggato e desidera vedere le recensioni di altri utenti
+        instance.get(`/review/GetAllReviewsOfGame/${this.receivedGameId}`)   //Chiamata all'API del backend per ottenere le recensioni
             .then(response => {
                 this.reviewList = response.data;
             })
             .catch(error => {
                 console.error(error);
             });
-    }
+      } else {    //se viene fornito anche l'userID, allora quest'ultimo è autenticato e vuole vedere le proprie recensioni, ma devo controllare che l'utente sia giusto.
+        // if(controllo tra store.id e this.receivedUserId) {//TODO check dell'id dell'url con l'accessToken
+        instance.get(`/users/usernameById/${this.receivedUserId}`)
+            .then(response => {
+              this.game.title = this.game.title + " di " + response.data
+            })
+        instance.get(`/review/getAllReviewsOfGameAndUser/${this.receivedGameId}/${this.receivedUserId}`)
+            .then(response => {
+              this.reviewList = response.data;
+            })
+            .catch(error => {
+              console.error(error);
+            });
+      // }
+      }
+    },
 }
 </script>

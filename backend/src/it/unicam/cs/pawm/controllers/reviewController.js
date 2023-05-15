@@ -68,6 +68,31 @@ exports.getAllReviewsOfUser = async (req, res) => {
 }
 
 /**
+ * Gets all reviews of a specific game from a specific user
+ * @param req
+ * @param res
+ * @returns {Promise<*>}
+ */
+exports.getAllReviewsOfUserAndGame = async (req, res) => {
+    try {
+        //vado a cercare l'utente con l'id passato
+        const gameId = req.params.gameId;
+        const userId = req.params.userId;
+        const user = await User.findByPk(userId);
+        if (!user) {
+            return res.status(404).send({message: 'User not found', status: 404 });
+        }
+        const reviews = await Review.findAll({ where: {gameId,userId} });
+        if (!reviews.length) {
+            return res.status(404).send({message: 'No reviews found for this user', status: 404});
+        }
+        return res.status(200).json(reviews);
+    } catch (error) {
+        return res.status(500).send({error: 'Error getting reviews', status: 500 });
+    }
+}
+
+/**
  * Adds a review but the user must be logged in with valid access token,
  * @param req
  * @param res
