@@ -39,7 +39,6 @@
 import instance from "@/axios";
 export default {
     name: "ReviewComponent",
-  methods: {instance},
     props: {
       review: {
         type: Object,
@@ -51,20 +50,20 @@ export default {
       nomeUtente : "account non più esistente"
     };
   },
+    methods: {
+        async getUsernameOfReview(){
+            await instance.get(`/users/usernameById/${this.review.userId}`)
+                .then(response => {
+                    this.nomeUtente = response.data;
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        }
+    },
   created() {
-    instance.get(`/users/usernameById/${this.review.userId}`)
-        .then(response => {
-          this.nomeUtente = response.data;
-        })
-        .catch(error => {
-          console.error(error);
-        });
+    this.getUsernameOfReview();
   }
-
-
-//   mounted() {
-//     this.nomeUtente = instance.get(`/users/usernameById/${this.review.userId}`)
-//   }
 }
 </script>
 

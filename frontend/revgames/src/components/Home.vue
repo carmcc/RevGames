@@ -33,30 +33,39 @@ export default {
     data() {
         return {
             cardLeaders: [], // Inizializza un array vuoto per i capi delle carte
-            username: localStorage.getItem('username'),
+            username: ''
         };
     },
-    async mounted() {
-// Chiama la tua API sul backend per ottenere i capi delle carte
-// Esempio di chiamata API usando axios:
-        await instance.get('api/protected')
-            .then(response => {
-                if (response.status === 200)
-                    console.log("OK");
-                store.dispatch('checkLogin');
-            })
-            .catch(() => {
-                console.log("Non sei piu loggato");
-                store.dispatch('logout');
-            });
-        await instance.get('/games/myGames')
-            .then(response => {
-                this.cardLeaders = response.data;
-            })
-            // .catch(error => {
-            //     console.error(error);
-            // });
+    methods: {
+        async protectedRoute(){
+            await instance.get('api/protected')
+                .then(response => {
+                    if (response.status === 200)
+                        console.log("OK");
+                })
+                .catch(() => {
+                    console.log("Non sei piu loggato");
+                    // store.dispatch('logout');
+                });
+        },
+        async getListOfGames(){
+            await instance.get('/games/myGames')
+                .then(response => {
+                    this.cardLeaders = response.data;
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        }
     },
+    created() {
+        this.protectedRoute();
+        this.getListOfGames();
+    },
+    beforeUpdate() {
+        store.dispatch('checkLogin');
+        this.username = localStorage.getItem('username');
+    }
 };
 </script>
 
