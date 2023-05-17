@@ -150,7 +150,7 @@ exports.updateReview = async (req, res) => {
             //controllo se esiste la recensione tramite id
             const review = await Review.findOne({ where: {  id: id } });
             if (review === null)
-                return res.status(404).json({message: 'Review not found', status: 404});
+                return res.status(404).send({message: 'Review not found', status: 404});
             //aggiorno la recensione con i nuovi dati
             review.title = title;
             review.description = description;

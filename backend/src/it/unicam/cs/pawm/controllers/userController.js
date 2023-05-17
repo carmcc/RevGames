@@ -71,7 +71,7 @@ exports.login = async (req, res) => {
 
     association.push(accessToken, refreshToken);
 
-    return res.status(200).json({accessToken, refreshToken, message: "Login successfull"});
+    return res.status(200).send({accessToken, refreshToken, message: "Login successfull"});
 }
 /**
  * Logout of an existing user
@@ -108,7 +108,7 @@ exports.getNonce = async (req, res) => {
 exports.protectedRoute = async (req, res) => {
     try {
         verifyAccessToken(req, res, async () => {
-            return res.status(200).json({message: 'Inside protected route', username: req.user.username,  status: 200});
+            return res.status(200).send({message: 'Inside protected route', username: req.user.username,  status: 200});
         });
     } catch (err) {
         res.status(500).send({error: 'Error', status: 500});
@@ -124,7 +124,7 @@ exports.protectedRoute = async (req, res) => {
 exports.verifyRefreshToken = async (req, res) => {
     try{
         verifyRefreshToken(req, res, async () => {
-            return res.status(200).json({message:'Refresh token validated', username: req.user.username,  status: 200});
+            return res.status(200).send({message:'Refresh token validated', username: req.user.username,  status: 200});
         });
     } catch (err) {
         res.status(500).send({error: 'Error', status: 500});
@@ -171,12 +171,12 @@ exports.generateNewTokens = async (req, res) => {
 
                 await invalidateRefreshToken(req.header('Authorization')?.split(' ')[1]);
 
-                return res.status(200).json({accessToken: newAccessToken, refreshToken: newRefreshToken, message: 'New refresh and access token generated', status: 200});
+                return res.status(200).send({accessToken: newAccessToken, refreshToken: newRefreshToken, message: 'New refresh and access token generated', status: 200});
 
             }
         );
     } catch (err) {
-        res.status(500).json('Error');
+        res.status(500).send({error: 'Error', status: 500});
     }
 }
 
