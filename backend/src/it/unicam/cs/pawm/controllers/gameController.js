@@ -13,7 +13,7 @@ exports.getAllGames = async (req, res) => {
         const allGames = await Game.findAll();
         return res.status(200).json(allGames);
     } catch (err) {
-        return res.status(500).send({message: "Error retrieving games", status: 500});
+        return res.status(500).send({error: "Error retrieving games", status: 500});
     }
 }
 
@@ -29,11 +29,11 @@ exports.getGameById = async (req, res) => {
     {
         const game = await Game.findByPk(req.params.id);
         if (game === null)
-            return res.status(404).send({error: 'Game not found', status: 404});
+            return res.status(404).send({message: 'Game not found', status: 404});
         return res.status(200).json(game);
     }
     catch (err) {
-       return res.status(500).send({message: 'Error retrieving game', status: 500});
+       return res.status(500).send({error: 'Error retrieving game', status: 500});
     }
 }
 
@@ -52,7 +52,7 @@ exports.getGameByTitle = async (req, res) => {
         return res.status(200).json(game);
     }
     catch (err) {
-        return res.status(500).send({message: 'Error retrieving game', status: 500});
+        return res.status(500).send({error: 'Error retrieving game', status: 500});
     }
 }
 
