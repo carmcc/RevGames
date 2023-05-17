@@ -3,7 +3,6 @@ import { createStore } from 'vuex';
 export default createStore({
     state: {
         isLogged: false,
-        username: null
     },
     mutations: {
         setLogged(state, value) {
@@ -18,22 +17,22 @@ export default createStore({
             localStorage.setItem('access_token', accessToken);
             localStorage.setItem('refresh_token', refreshToken);
             commit('setLogged', true);
-            commit('setUsername', username);
+            localStorage.setItem('username', username);
         },
         logout({ commit }) {
             localStorage.removeItem('access_token');
             localStorage.removeItem('refresh_token');
+            localStorage.removeItem('User');
             commit('setLogged', false);
-            commit('setUsername', null);
         },
-        checkLogin({ commit }, { username }) {
+        checkLogin({ commit }) {
             const accessToken = localStorage.getItem('access_token');
             const refreshToken = localStorage.getItem('refresh_token');
-            commit('setUsername', username);
             if (accessToken && refreshToken) {
                 commit('setLogged', true);
             } else {
                 commit('setLogged', false);
+                localStorage.getItem('User');
             }
         }
     }

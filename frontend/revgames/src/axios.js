@@ -4,12 +4,12 @@ import axios from 'axios';
 const instance = axios.create({
     baseURL: 'http://localhost:3000/',
 });
-instance.flag = true;
+let flag = true;
 // Interceptor delle richieste
 instance.interceptors.request.use((config) => {
     const accessToken = localStorage.getItem('access_token');
     const refreshToken = localStorage.getItem('refresh_token');
-    if (accessToken && instance.flag) {
+    if (accessToken && flag) {
         // Aggiungi il token di accesso all'header della richiesta
         config.headers.Authorization = `Bearer ${accessToken}`;
     }
@@ -24,41 +24,39 @@ instance.interceptors.request.use((config) => {
 instance.interceptors.response.use(
     (response) => {
         // Se la risposta è valida, la restituisco così com'è
-        instance.flag = true;
-        return response;
-    },
-    async (error) => {
-        instance.flag = false;
-        const originalRequest = error.config;
-        const refreshToken = localStorage.getItem('refresh_token');
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('refresh_token');
-        if (refreshToken && error.response?.status === 403 && !originalRequest._retry) {
-            originalRequest._retry = true;
-            try {
-                // Effettua una richiesta per ottenere un nuovo token di accesso utilizzando il refresh token
-                const response = await instance.post('new-refreshToken', {
-                    refresh_token: refreshToken,
-                });
-                instance.flag = true;
-                // const newAccessToken = response.data.accessToken;
-                // Salva il nuovo token di accesso nell'archivio locale
-                localStorage.setItem('access_token', response.data.accessToken);
-                localStorage.setItem('refresh_token', response.data.refreshToken);
-                // Aggiorna l'header dell'originale richiesta con il nuovo token di accesso
-                originalRequest.headers.Authorization = `Bearer ${response.data.accessToken}`;
-                // Riprova la richiesta originale con il nuovo token di accesso
-
-                return axios(originalRequest);
-            } catch (refreshError) {
-                console.log("Error refreshing token: " + refreshError);
-                // Gestisci gli errori durante la richiesta di un nuovo token di accesso
-                // console.error(refreshError);
-                // Effettua la gestione dell'errore come desiderato (ad esempio, reindirizza l'utente alla pagina di accesso)
-            }
+        if(response.status === 200)
+        {
+            flag = true;
+            return response;
         }
-        // Gestisci altri tipi di errori
-        return Promise.reject(error);
+    },
+    (error) => {
+        // Se la risposta non è valida, provo a fare il refresh del token
+        const originalRequest = error.config;
+        if (error.response.status === 403 && flag) {
+            flag = false;
+            return instance
+                .post('/new-refreshToken')
+                .then((res) => {
+                    if (res.status === 200) {
+                        // Se il refresh è andato a buon fine, aggiorno i token
+                        localStorage.setItem('access_token', res.data.accessToken);
+                        localStorage.setItem('refresh_token', res.data.refreshToken);
+                        // Riprovo la richiesta originale con i nuovi token
+                        return instance(originalRequest);
+                    }
+                })
+                .catch((err) => {
+                    // Se il refresh non è andato a buon fine, rimuovo i token e reindirizzo alla pagina di login
+                    localStorage.removeItem('access_token');
+                    localStorage.removeItem('refresh_token');
+                    localStorage.removeItem('username');
+                    // window.location.href = '/login';
+                    return Promise.reject(err);
+                });
+
+        }
+        // return Promise.reject(error);
     }
 );
 

@@ -21,8 +21,9 @@
 </template>
 
 <script>
-import CardGame from './CardGame.vue';
-import instance from "@/axios"; // Importa il componente CardGame
+import CardGame from './CardGame.vue'; // Importa il componente CardGame
+import instance from "@/axios";
+import store from "../store";
 
 export default {
     name: 'HomePage',
@@ -32,32 +33,29 @@ export default {
     data() {
         return {
             cardLeaders: [], // Inizializza un array vuoto per i capi delle carte
+            username: localStorage.getItem('username'),
         };
     },
-    computed: {
-        username() {
-            return this.$store.state.username;
-        },
-    },
-    mounted() {
+    async mounted() {
 // Chiama la tua API sul backend per ottenere i capi delle carte
 // Esempio di chiamata API usando axios:
-        instance.get('/games/myGames')
+        await instance.get('api/protected')
+            .then(response => {
+                if (response.status === 200)
+                    console.log("OK");
+                store.dispatch('checkLogin');
+            })
+            .catch(() => {
+                console.log("Non sei piu loggato");
+                store.dispatch('logout');
+            });
+        await instance.get('/games/myGames')
             .then(response => {
                 this.cardLeaders = response.data;
             })
-            .catch(error => {
-                console.error(error);
-            });
-    },
-    async created() {
-        try {
-            const response = await instance.get('api/protected');
-            if (response.status === 200)
-                this.$store.dispatch('checkLogin', {username: response.data.username});
-        } catch (response) {
-            console.log(response.message);
-        }
+            // .catch(error => {
+            //     console.error(error);
+            // });
     },
 };
 </script>
