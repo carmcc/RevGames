@@ -192,20 +192,28 @@ exports.getAllUsers = async (req, res) => {
 exports.getUserNameById = async (req, res) => {
     try{
         const user = await User.findByPk(req.params.userId)
-        res.status(200).send(user.username)     //invio la stringa del campo username
+        if(!user)
+            return res.status(400).send({message: "User not found", status: 400})
+
+        return res.status(200).send({username: user.username, status: 200})
+    } catch (err) {
+        return res.status(500).send({error: 'Error', status: 500})
+    }
+}
+
+exports.getUserIdByUsername = async (req, res) => {
+    const {username} = req.params
+    try{
+        const user = await User.findOne({where: {username: username}})
+        if (!user)
+            return res.status(400).send({message: "User not found", status: 400})
+
+        const userId = user.id
+        return res.status(200).send({userId, status: 200})
     } catch (err) {
         res.status(500).send({error: 'Error', status: 500})
     }
 }
-
-// exports.getUserIdByUsername = async (req, res) => {
-//     try{
-//         const user = (await User.findAll({where: {username: req.params.username}}))  //TODO da implementare
-//         res.status(200).send(user.data)
-//     } catch (err) {
-//         res.status(500).send({error: 'Error', status: 500})
-//     }
-// }
 
 function getRefreshTokenByAccessToken(accessToken) {
     for (let i = 0; i < association.length; i++) {
