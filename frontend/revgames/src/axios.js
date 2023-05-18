@@ -27,8 +27,8 @@ instance.interceptors.response.use(
         if(response.status === 200)
         {
             flag = true;
-            return response;
         }
+        return response;
     },
     (error) => {
         // Se la risposta non è valida, provo a fare il refresh del token
@@ -56,7 +56,7 @@ instance.interceptors.response.use(
                 });
 
         }
-        // return Promise.reject(error);
+        return Promise.reject(error);
     }
 );
 
