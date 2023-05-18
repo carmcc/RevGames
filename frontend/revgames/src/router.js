@@ -92,7 +92,7 @@ const router = createRouter({
             props: true,
             meta: {
                 hideNavbar: false,
-                isAuthRequired: false, //TODO non riesco ad accedere alla pagina (quindi l'ho impostato a false anche se non dovrebbe)
+                isAuthRequired: true,
             },
         },
         {

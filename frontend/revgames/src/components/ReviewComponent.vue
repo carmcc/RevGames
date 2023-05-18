@@ -38,31 +38,26 @@
 <script>
 import instance from "@/axios";
 export default {
-    name: "ReviewComponent",
-    props: {
-      review: {
-        type: Object,
-        required: true
-      }
-    },
-    data() {
+  name: "ReviewComponent",
+  props: {
+    review: {
+      type: Object,
+      required: true
+    }
+  },
+  data() {
     return {
-      nomeUtente : "account non più esistente"
+      nomeUtente : "account non più esistente",
     };
   },
-    methods: {
-        async getUsernameOfReview(){
-            await instance.get(`/users/usernameById/${this.review.userId}`)
-                .then(response => {
-                    this.nomeUtente = response.data;
-                })
-                .catch(error => {
-                    console.error(error);
-                });
-        }
-    },
   created() {
-    this.getUsernameOfReview();
+    instance.get(`/users/getUsernameById/${this.review.userId}`)
+        .then(response => {
+          this.nomeUtente = response.data.username;
+        })
+        .catch(error => {
+          console.error(error);
+        });
   }
 }
 </script>
