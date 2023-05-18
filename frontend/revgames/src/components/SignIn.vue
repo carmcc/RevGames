@@ -2,6 +2,14 @@
   <form @submit.prevent="loginUser">
     <!--    <img class="mb-4" src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">-->
     <h1 class="h3 mb-3 font-weight-normal animate__animated animate__fadeInUp animate__delay-0.5s">Please sign in</h1>
+    <div v-if="isSubmitting" class="alert alert-info" role="alert">
+      <strong>Logging in...</strong>
+    </div>
+      <div v-if="isSubmitting">
+        <div class="spinner-border small-spinner text-primary" role="status">
+          <span class="sr-only"></span>
+        </div>
+      </div>
     <div>
       <label>Username:</label>
       <input type="text" v-model="username" required>
@@ -19,25 +27,27 @@
     <!--      </label>-->
     <!--    </div>-->
     <button class="btn btn-lg btn-primary btn-block" type="submit" :disabled="isSubmitting">Sign in</button>
+      <div v-if="errorMessage" class ="error-message">{{errorMessage}}</div>
   </form>
 </template>
 
 <script>
-import axios from '../axios';
+import instance from '@/axios';
 export default {
     name: 'SignIn',
     data() {
         return {
             username: '',
             password: '',
-            isSubmitting: false
-        }
+            isSubmitting: false,
+            errorMessage: ''
+        };
     },
     methods: {
         async loginUser() {
             this.isSubmitting = true;
             try {
-                const response = await axios.post('auth/login', {
+                const response = await instance.post('auth/login', {
                     username: this.username,
                     password: this.password
                 });
@@ -45,16 +55,16 @@ export default {
                     accessToken: response.data.accessToken,
                     refreshToken: response.data.refreshToken,
                     username: this.username
-                })
+                });
                 this.$router.push('/');
             } catch (error) {
-                console.log(error);
+                this.errorMessage = error.response.data.message;
             } finally {
                 this.isSubmitting = false;
             }
         }
     }
-}
+};
 </script>
 
 <style scoped>
@@ -93,5 +103,13 @@ button[type="submit"] {
 button[type="submit"]:hover {
   background-color: #0062cc;
 }
-
+.small-spinner {
+    width: 1.5rem;
+    height: 1.5rem;
+    border-width: 0.2em;
+}
+.error-message {
+    color: red;
+    font-weight: bold;
+}
 </style>
