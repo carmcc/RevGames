@@ -12,6 +12,7 @@
           <ReviewComponent v-for="review in reviewList" :key="review.id" :review="review"/>
         </div>
       </div>
+        <button @click="navigateToAddReview" v-if=isLogged>Aggiungi Recensione</button>
     </div>
   </div>
 </template>
@@ -19,7 +20,7 @@
 <script>
 import ReviewComponent from "@/components/ReviewComponent.vue";
 import instance from "@/axios";
-// import store from "@/store";
+import store from "@/store";
 
 export default {
   name: 'GameReview',
@@ -49,6 +50,9 @@ export default {
     };
   },
   computed: {
+      isLogged() {
+          return store.state.isLogged;
+      },
     /**
      * Estrae dai file locali l'immagine indicata dal percorso presente tra i parametri di game
      *
@@ -82,6 +86,16 @@ export default {
     }
   },
   methods: {
+      navigateToAddReview() {
+          // Utilizza il router per navigare alla pagina per aggiungere una recensione
+          this.$router.push({
+              name: 'AddReview',
+              params: {
+                  idUser: this.loggedId,
+                  idGame: this.receivedGameId,
+              },
+          });
+      },
     /**
      * Effettua una query al database per ottenere informazioni riguardo al gioco selezionato
      *

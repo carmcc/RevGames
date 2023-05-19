@@ -1,12 +1,6 @@
 <template>
     <div class="container">
         <h1 class="text-center">Nuova Recensione di {{username}}</h1>
-
-        <div class="form-group">
-            <label for="title">Titolo:</label>
-            <input type="text" class="form-control" v-model="review.title">
-        </div>
-
         <div class="form-group">
             <label for="rating">Rating:</label>
             <select class="form-control" v-model="review.rating">
@@ -30,20 +24,21 @@
 </template>
 
 <script>
+import instance from '@/axios.js';
 export default {
     data() {
         return {
-            username: '',
             review: {
-                title: '',
-                rating: '',
+                rating: null,
                 content: ''
             },
             characterCount: 0
         };
     },
-    created() {
-        this.username = localStorage.getItem('username');
+    computed: {
+        username() {
+            return localStorage.getItem('username');
+        }
     },
     methods: {
         limitCharacters() {
@@ -52,19 +47,24 @@ export default {
             }
             this.characterCount = this.review.content.length;
         },
-        submitReview() {
+        async submitReview() {
             // Logica per inviare la recensione al backend
-            console.log(this.review);
+            const parsedRating = parseInt(this.review.rating, 10);
+            const parsedUserId = parseInt(this.$route.params.idUser, 10);
+            const parsedGameId = parseInt(this.$route.params.idGame, 10);
+            await instance.post('/review/addReview',
+                {
+                    rating: parsedRating,
+                    description: this.review.content,
+                    userId: parsedUserId,
+                    gameId: parsedGameId
+                })
             // Esegui il reset dei campi
-            this.review.title = '';
             this.review.rating = '';
             this.review.content = '';
             this.characterCount = 0;
         }
     },
-    beforeUpdate() {
-        this.username = localStorage.getItem('username');
-    }
 };
 </script>
 

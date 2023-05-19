@@ -27,13 +27,10 @@
               <a class="nav-link"><router-link to="/signin">SignIn</router-link></a>
             </li>
             <li class="nav-item" v-if="isLogged">
-              <a class="nav-link"><router-link to="/logout">Logout</router-link></a>
-            </li>
-            <li class="nav-item">
                 <a class="nav-link"><router-link to="/addGame">Add Game</router-link></a>
             </li>
-              <li class="nav-item">
-                  <a class="nav-link"><router-link to="/addReview">Add Review</router-link></a>
+              <li class="nav-item" v-if="isLogged">
+                  <a class="nav-link"><router-link to="/logout">Logout</router-link></a>
               </li>
 <!--            <li class="nav-item dropdown">-->
 <!--              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">-->
