@@ -106,9 +106,17 @@ exports.getNonce = async (req, res) => {
 }
 
 exports.protectedRoute = async (req, res) => {
+    //prendo il campo isAdmin dal token
+
     try {
         verifyAccessToken(req, res, async () => {
-            return res.status(200).send({message: 'Inside protected route', username: req.user.username,  status: 200});
+            const user = await User.findOne({ where: { username: req.user.username } }); // Cerca l'utente per username
+
+            if (user) {
+                const isAdmin = user.isAdmin;
+                return res.status(200).send({ message: 'Inside protected route', username: req.user.username, isAdmin: isAdmin, status: 200 });
+            }
+            return res.status(401).send({message: 'Unauthorized', status: 401});
         });
     } catch (err) {
         res.status(500).send({error: 'Error', status: 500});
