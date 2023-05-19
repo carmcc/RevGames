@@ -1,19 +1,25 @@
 <template>
   <div>
-    <h1>Pippo</h1>
-    <h1 class="animate__animated animate__fadeInUp animate__delay-1s">{{titoloPagina}}</h1>
-    <div class="game-banner">
-      <img :src=cardBannerUrl :alt="game.title"/>
-      <p class="game-description">{{game.description}}</p>
+    <div class="container-mt-3">
+    <h1 class="animate__animated animate__fadeInUp animate__delay-1s">{{ titoloPagina }}</h1>
+    <div class=" game-banner animate__animated animate__fadeInUp animate__delay-0.5s">
+      <div class="game-banner-image">
+        <img :src="cardBannerUrl" :alt="game.title" />
+      </div>
+      <div class="game-banner-content">
+        <h2>{{ game.title }}</h2>
+        <p class="game-description">{{ game.description }}</p>
+      </div>
     </div>
     <div class="album py-5 bg-light animate__animated animate__fadeInUp animate__delay-1s">
       <div class="container">
         <div class="row animate__animated animate__fadeInUp animate__delay-1s">
-          <ReviewComponent v-for="review in reviewList" :key="review.id" :review="review"/>
+          <ReviewComponent v-for="review in reviewList" :key="review.id" :review="review" />
         </div>
       </div>
         <button @click="navigateToAddReview" v-if=isLogged>Aggiungi Recensione</button>
     </div>
+  </div>
   </div>
 </template>
 
@@ -116,7 +122,8 @@ export default {
      * Visualizza tutte le recensioni del gioco ef imposta un titolo generico.
      */
     visualizzazioneNormale() {
-      this.titoloPagina = "Recensioni di "+this.game.title
+
+      this.titoloPagina = "Recensioni di " + this.game.title
 
       instance.get(`/review/getAllReviewsOfGame/${this.receivedGameId}`)
           .then(response =>{
@@ -128,7 +135,7 @@ export default {
      * Visualizza tutte le recensioni che l'utente ha fatto del gioco ed inposta un titolo col suo nome.
      */
     visualizzazioneLoggata() {
-      this.titoloPagina = "Recensioni di "+this.game.title+" di "+this.loggedUsername
+      this.titoloPagina = "Recensioni di "+ this.game.title + " di " + this.loggedUsername
 
       instance.get(`/review/getAllReviewsOfGameAndUser/${this.receivedGameId}/${this.loggedId}`)
           .then(response =>{
@@ -138,3 +145,45 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.game-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f7f7f7;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.game-banner-image {
+  flex: 0 0 40%;
+  margin-right: 40px;
+}
+
+.game-banner-image img {
+  max-width: 100%;
+  border-radius: 8px;
+}
+
+.game-banner-content {
+  flex: 1;
+}
+
+.game-banner-content h2 {
+  font-size: 24px;
+  margin-bottom: 16px;
+}
+
+.game-description {
+  margin-bottom: 24px;
+}
+
+.album {
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+
+</style>
+
