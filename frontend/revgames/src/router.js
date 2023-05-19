@@ -9,8 +9,8 @@ import GameReview from "@/components/GameReview.vue";
 import AddReview from "@/components/AddReview.vue";
 import { createRouter, createWebHistory } from "vue-router";
 import store from './store.js';
+import instance from '@/axios.js';
 
-let isUserLogged= false
 
 const router = createRouter({
     history: createWebHistory(),
@@ -120,22 +120,26 @@ const router = createRouter({
     ]
 });
 
-router.beforeEach((to, from, next) => {
-    checkLogin();
+router.beforeEach(async (to, from, next) => {
     if (to.meta.isAuthRequired) {
-        if(isUserLogged) {
+        // store.dispatch("checkLogin");
+        try{
+            await instance.get("/api/protected");
+            store.commit("setLogged", true);
             next();
-        }else{
+        }catch (e) {
+            store.commit("setLogged", false);
             next("/signin");
         }
     } else {
+        let user = localStorage.getItem("username");
+        if(user)
+            store.commit("setLogged", true);
+        else
+            store.commit("setLogged", false);
         next();
     }
 });
-
-function checkLogin() {
-    isUserLogged = store.state.isLogged;
-}
 
 
 export default router;

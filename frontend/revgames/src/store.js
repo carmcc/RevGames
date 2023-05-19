@@ -8,9 +8,6 @@ export default createStore({
         setLogged(state, value) {
             state.isLogged = value
         },
-        setUsername(state, value) {
-            state.username = value
-        }
     },
     actions: {
         login({ commit }, { accessToken, refreshToken, username }) {
@@ -22,7 +19,7 @@ export default createStore({
         logout({ commit }) {
             localStorage.removeItem('access_token');
             localStorage.removeItem('refresh_token');
-            localStorage.removeItem('User');
+            localStorage.removeItem('username');
             commit('setLogged', false);
         },
         checkLogin({ commit }) {
@@ -32,7 +29,7 @@ export default createStore({
                 commit('setLogged', true);
             } else {
                 commit('setLogged', false);
-                localStorage.getItem('User');
+                localStorage.removeItem('username');
             }
         }
     }
