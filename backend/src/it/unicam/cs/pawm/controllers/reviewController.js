@@ -101,13 +101,10 @@ exports.getAllReviewsOfUserAndGame = async (req, res) => {
  */
 
 exports.addReview = async (req, res) => {
-    const { title, description, rating, userId, gameId } = req.body;
+    const {description, rating, userId, gameId } = req.body;
 
-    if (title === undefined || title === '' || description === '' || description === undefined || rating === '' || rating === undefined || gameId === '' || gameId === undefined)
-        return res.status(400).send({message: 'Title, description, rating or gameId missing', status: 400});
-
-    if (typeof (title) !== "string")
-        return res.status(400).send({message: 'Invalid title', status: 400});
+    if (description === '' || description === undefined || rating === '' || rating === undefined || gameId === '' || gameId === undefined || userId === '' || userId === undefined)
+        return res.status(400).send({message: 'Description, rating, gameId or userId missing', status: 400});
 
     if (typeof (description) !== "string")
         return res.status(400).send({message: 'Invalid description', status: 400});
@@ -118,10 +115,13 @@ exports.addReview = async (req, res) => {
     if (typeof (gameId) !== "number")
         return res.status(400).send({message: 'Invalid gameId', status: 400});
 
+    if (typeof (userId) !== "number")
+        return res.status(400).send({message: 'Invalid userId', status: 400});
+
     verifyAccessToken(req, res, async() => {
         try {
             //creazione recensione
-            const newReview = await Review.create({ title, description, rating, date: Date.now(), gameId, userId});
+            const newReview = await Review.create({description, rating, date: Date.now(), gameId, userId});
             await newReview.save();
             res.status(201).send({message: 'Review created', status: 201});
         } catch (err) {

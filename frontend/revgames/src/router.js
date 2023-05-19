@@ -109,8 +109,8 @@ const router = createRouter({
         {
             name: "AddReview",
             component: AddReview,
-            path: "/addReview",
-            props: false,
+            path: "/addReview/:idUser/:idGame",
+            props: true,
             meta: {
                 hideNavbar: false,
                 isAuthRequired: true,

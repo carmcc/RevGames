@@ -9,7 +9,7 @@ let invalidToken = [];
  * @returns {*} the access token
  */
 function generateAccessToken(payload) {
-    return jwt_auth.sign(payload, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '30s'});
+    return jwt_auth.sign(payload, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '1h'});
 }
 
 /**
@@ -18,7 +18,7 @@ function generateAccessToken(payload) {
  * @returns {*} the refresh token
  */
 function generateRefreshToken(payload) {
-    return jwt_auth.sign(payload, process.env.REFRESH_TOKEN_SECRET, {expiresIn: '1m'});
+    return jwt_auth.sign(payload, process.env.REFRESH_TOKEN_SECRET, {expiresIn: '2h'});
 }
 
 /**
