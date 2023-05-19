@@ -19,7 +19,7 @@
 <script>
 import ReviewComponent from "@/components/ReviewComponent.vue";
 import instance from "@/axios";
-import store from "@/store";
+// import store from "@/store";
 
 export default {
   name: 'GameReview',
@@ -59,7 +59,7 @@ export default {
     }
   },
   async created() {
-    await store.dispatch('checkLogin');
+    // await store.dispatch('checkLogin');
 
     this.getGameById(this.receivedGameId)
 
