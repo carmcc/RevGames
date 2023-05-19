@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import axios from "@/axios";
+import instance from "@/axios";
 
 export default {
     name: "AddGame",
@@ -42,7 +42,7 @@ export default {
         async addGame() {
             // Esegui qui la logica per l'inserimento del gioco nel tuo backend, ad esempio una chiamata API
             // Utilizza this.game per accedere ai dati del gioco da inviare al backend
-            await axios.post('/games/addGame', {
+            await instance.post('/games/addGame', {
                 title: this.game.title,
                 description: this.game.description,
                 rating: this.game.rating,

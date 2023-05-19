@@ -60,14 +60,14 @@
 </template>
 
 <script>
+import store from '../store'
 export default {
   name: "NavSideBar",
-  computed: {
-    isLogged() {
-      return this.$store.state.isLogged
-    }
-  }
-
+    computed: {
+            isLogged(){
+                return store.state.isLogged
+            }
+        },
 }
 </script>
 
