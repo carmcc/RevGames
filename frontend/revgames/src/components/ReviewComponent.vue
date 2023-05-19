@@ -13,7 +13,7 @@
     <div class="review-box">
       <div class="review-body">
         <p class="review-header">
-          <b>{{nomeUtente}}</b>&nbsp;&nbsp;&nbsp;&nbsp;{{review.rating}}/5
+          <b>{{nomeUtente}}</b> {{review.rating}}/5
         </p>
         <p class="review-text">{{review.description}}</p>
         <div class="d-flex justify-content-between align-items-center">
@@ -22,17 +22,6 @@
     </div>
   </div>
 </template>
-
-<style>
-.review-box {
-  background-color: #f1f1f1;
-  border: 1px solid #000;
-  padding: 10px;
-}
-.review-header {
-  margin-bottom: 10px;
-}
-</style>
 
 
 <script>
@@ -63,5 +52,27 @@ export default {
 </script>
 
 <style scoped>
+
+.review-box {
+  background-color: #f7f7f7;
+  padding: 20px;
+  border-radius: 8px;
+  transition: transform 0.2s ease-in-out;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.review-box:hover{
+  transform: scale(1.05);
+}
+
+.review-header {
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.review-text {
+  font-size: 14px;
+  line-height: 1.4;
+}
 
 </style>
