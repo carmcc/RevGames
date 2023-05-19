@@ -30,11 +30,10 @@
 </template>
 
 <script>
-import instance from "@/axios";
-
 export default {
     data() {
         return {
+            username: '',
             review: {
                 title: '',
                 rating: '',
@@ -43,21 +42,8 @@ export default {
             characterCount: 0
         };
     },
-    computed: {
-        username() {
-            return this.$store.state.username;
-        },
-    },
-    mounted() {
-        window.onload = async () => {
-            try {
-                const response = await instance.get('api/protected');
-                if (response.status === 200)
-                    this.$store.dispatch('checkLogin', {username: response.data.username});
-            } catch (error) {
-                console.log(error.message);
-            }
-        }
+    created() {
+        this.username = localStorage.getItem('username');
     },
     methods: {
         limitCharacters() {
@@ -75,6 +61,9 @@ export default {
             this.review.content = '';
             this.characterCount = 0;
         }
+    },
+    beforeUpdate() {
+        this.username = localStorage.getItem('username');
     }
 };
 </script>

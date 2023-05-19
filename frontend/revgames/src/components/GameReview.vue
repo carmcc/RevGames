@@ -45,20 +45,27 @@ export default {
             },
         };
     },
+    methods:{
+        async getGameById(gameId) {
+            await instance.get(`/games/getGameById/${gameId}`)
+                .then(response => {
+                    this.game.title = response.data.title;
+                    this.game.bannerImageUrl = response.data.url;
+                    this.game.description = response.data.description;
+                })
+                .catch(error => {
+                    console.log("Errore nella chiamata all'API per ottenere il gioco");
+                console.error(error);
+            });
+        },
+    },
     computed: {
         cardBannerUrl() {   //effettiva estrazione dell'immagine dai file locali
             return require(`../assets/${this.game.bannerImageUrl}`);
         }
     },
     created() {   //effettiva estrazione dei dati dal database
-        instance.get(`/games/getGameById/${this.receivedGameId}`)
-            .then(response => {
-              this.game.title = response.data.title;
-              this.game.bannerImageUrl = response.data.url;
-              this.game.description = response.data.description;
-            }).catch(error => {
-          console.error(error);
-        });
+        this.getGameById(this.receivedGameId);
     },
     mounted() {
       if(this.receivedUserId==null) {   //se non è stato passato un userID, allora l'utente non è loggato e desidera vedere le recensioni di altri utenti

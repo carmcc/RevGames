@@ -23,8 +23,6 @@
 <script>
 import CardGame from './CardGame.vue'; // Importa il componente CardGame
 import instance from "@/axios";
-import store from "../store";
-
 export default {
     name: 'HomePage',
     components: {
@@ -37,17 +35,6 @@ export default {
         };
     },
     methods: {
-        async protectedRoute(){
-            await instance.get('api/protected')
-                .then(response => {
-                    if (response.status === 200)
-                        console.log("OK");
-                })
-                .catch(() => {
-                    console.log("Non sei piu loggato");
-                    // store.dispatch('logout');
-                });
-        },
         async getListOfGames(){
             await instance.get('/games/myGames')
                 .then(response => {
@@ -59,11 +46,9 @@ export default {
         }
     },
     created() {
-        this.protectedRoute();
         this.getListOfGames();
     },
     beforeUpdate() {
-        store.dispatch('checkLogin');
         this.username = localStorage.getItem('username');
     }
 };
@@ -98,6 +83,4 @@ export default {
 .jumbotron .container {
     max-width: 40rem;
 }
-
-//.box-shadow { box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05); }
 </style>
