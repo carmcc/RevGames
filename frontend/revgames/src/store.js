@@ -1,13 +1,18 @@
 import { createStore } from 'vuex';
+import instance from '@/axios.js';
 
 export default createStore({
     state: {
         isLogged: false,
+        isAdministrator: false,
     },
     mutations: {
         setLogged(state, value) {
             state.isLogged = value
         },
+        setAdministrator(state, value) {
+            state.isAdministrator = value
+        }
     },
     actions: {
         login({ commit }, { accessToken, refreshToken, username }) {
@@ -22,15 +27,11 @@ export default createStore({
             localStorage.removeItem('username');
             commit('setLogged', false);
         },
-        checkLogin({ commit }) {
-            const accessToken = localStorage.getItem('access_token');
-            const refreshToken = localStorage.getItem('refresh_token');
-            if (accessToken && refreshToken) {
+        async checkLoginWithAuthentication({ commit }) {
+            await instance.get("/api/protected").then((response) => {
+                commit('setAdministrator', response.data.isAdmin);
                 commit('setLogged', true);
-            } else {
-                commit('setLogged', false);
-                localStorage.removeItem('username');
-            }
+            });
         }
     }
 });

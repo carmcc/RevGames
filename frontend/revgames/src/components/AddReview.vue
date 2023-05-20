@@ -52,13 +52,19 @@ export default {
             const parsedRating = parseInt(this.review.rating, 10);
             const parsedUserId = parseInt(this.$route.params.idUser, 10);
             const parsedGameId = parseInt(this.$route.params.idGame, 10);
-            await instance.post('/review/addReview',
-                {
-                    rating: parsedRating,
-                    description: this.review.content,
-                    userId: parsedUserId,
-                    gameId: parsedGameId
-                })
+            try {
+                await instance.post('/review/addReview',
+                    {
+                        rating: parsedRating,
+                        description: this.review.content,
+                        userId: parsedUserId,
+                        gameId: parsedGameId
+                    })
+            } catch (error) {
+                console.log(error);
+            } finally {
+                this.isSubmitting = false;
+            }
             // Esegui il reset dei campi
             this.review.rating = '';
             this.review.content = '';

@@ -9,7 +9,6 @@ import GameReview from "@/components/GameReview.vue";
 import AddReview from "@/components/AddReview.vue";
 import { createRouter, createWebHistory } from "vue-router";
 import store from './store.js';
-import instance from '@/axios.js';
 
 
 const router = createRouter({
@@ -122,21 +121,23 @@ const router = createRouter({
 
 router.beforeEach(async (to, from, next) => {
     if (to.meta.isAuthRequired) {
-        // store.dispatch("checkLogin");
         try{
-            await instance.get("/api/protected");
-            store.commit("setLogged", true);
+            await store.dispatch("checkLoginWithAuthentication");
             next();
         }catch (e) {
             store.commit("setLogged", false);
+            store.commit("setAdministrator", false)
             next("/signin");
         }
     } else {
         let user = localStorage.getItem("username");
-        if(user)
-            store.commit("setLogged", true);
-        else
+        if(user) {
+            await store.dispatch("checkLoginWithAuthentication");
+        }
+        else {
             store.commit("setLogged", false);
+            store.commit("setAdministrator", false)
+        }
         next();
     }
 });

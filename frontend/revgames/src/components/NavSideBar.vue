@@ -26,7 +26,7 @@
             <li class="nav-item" v-if="!isLogged">
               <a class="nav-link"><router-link to="/signin">SignIn</router-link></a>
             </li>
-            <li class="nav-item" v-if="isLogged">
+            <li class="nav-item" v-if="isLogged && isAdmin">
                 <a class="nav-link"><router-link to="/addGame">Add Game</router-link></a>
             </li>
               <li class="nav-item" v-if="isLogged">
@@ -63,6 +63,9 @@ export default {
     computed: {
             isLogged(){
                 return store.state.isLogged
+            },
+            isAdmin(){
+                return store.state.isAdministrator
             }
         },
 }
