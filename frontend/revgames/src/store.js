@@ -5,6 +5,7 @@ export default createStore({
     state: {
         isLogged: false,
         isAdministrator: false,
+        viewPressed: false,
     },
     mutations: {
         setLogged(state, value) {
@@ -12,6 +13,9 @@ export default createStore({
         },
         setAdministrator(state, value) {
             state.isAdministrator = value
+        },
+        setViewPressed(state, value) {
+            state.viewPressed = value
         }
     },
     actions: {

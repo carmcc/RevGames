@@ -17,7 +17,7 @@
           <ReviewComponent v-for="review in reviewList" :key="review.id" :review="review" />
         </div>
       </div>
-        <button class ="add-review" @click="navigateToAddReview" v-if=isLogged>Aggiungi Recensione</button>
+        <button class ="add-review" @click="navigateToAddReview" v-if="isLogged">Aggiungi Recensione</button>
     </div>
   </div>
   </div>
@@ -84,12 +84,10 @@ export default {
           console.error(error);
         });
 
-    if(this.loggedUsername == null)
-    {
-      this.visualizzazioneNormale()
-    } else {
-      this.visualizzazioneLoggata()
-    }
+    if(!store.state.viewPressed)
+        this.visualizzazioneNormale()
+    else
+        this.visualizzazioneLoggata()
   },
   methods: {
       navigateToAddReview() {
