@@ -15,74 +15,90 @@
 
         <div class="form-group">
             <label for="content">Contenuto:</label>
-            <textarea class="form-control" rows="5" v-model="review.content" @input="limitCharacters"></textarea>
+            <textarea class="form-control" rows="5" v-model="review.description" @input="limitCharacters"></textarea>
             <small class="text-muted">Caratteri: {{ characterCount }}/255</small>
         </div>
 
-        <button class="btn btn-primary btn-block" @click="submitReview">Invia Recensione</button>
+        <button class="btn btn-primary btn-block" type="submit" @click="submitReview" :disabled="isSubmitting">Invia Recensione</button>
+        <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
+
     </div>
 </template>
 
 <script>
 import instance from '@/axios.js';
 export default {
-    data() {
-        return {
-            review: {
-                rating: null,
-                content: ''
-            },
-            characterCount: 0
-        };
+  data() {
+    return {
+      review: {
+        rating: null,
+        description: '',
+      },
+      characterCount: 0,
+      isSubmitting: false,
+      errorMessage: ''
+    };
+  },
+  computed: {
+    username() {
+      return localStorage.getItem('username');
+    }
+  },
+  methods: {
+    limitCharacters() {
+      if (this.review.description.length > 255) {
+        this.review.description = this.review.description.slice(0, 255);
+      }
+      this.characterCount = this.review.description.length;
     },
-    computed: {
-        username() {
-            return localStorage.getItem('username');
-        }
-    },
-    methods: {
-        limitCharacters() {
-            if (this.review.content.length > 255) {
-                this.review.content = this.review.content.slice(0, 255);
-            }
-            this.characterCount = this.review.content.length;
-        },
-        async submitReview() {
-            // Logica per inviare la recensione al backend
-            const parsedRating = parseInt(this.review.rating, 10);
-            const parsedUserId = parseInt(this.$route.params.idUser, 10);
-            const parsedGameId = parseInt(this.$route.params.idGame, 10);
-            await instance.post('/review/addReview',
-                {
-                    rating: parsedRating,
-                    description: this.review.content,
-                    userId: parsedUserId,
-                    gameId: parsedGameId
-                })
-            // Esegui il reset dei campi
-            this.review.rating = '';
-            this.review.content = '';
-            this.characterCount = 0;
-        }
-    },
+    async submitReview() {
+      this.isSubmitting = true;
+      try {
+        // Logica per inviare la recensione al backend
+        const parsedRating = parseInt(this.review.rating, 10);
+        const parsedUserId = parseInt(this.$route.params.idUser, 10);
+        const parsedGameId = parseInt(this.$route.params.idGame, 10);
+        await instance.post('/review/addReview',
+            {
+              rating: parsedRating,
+              description: this.review.description,
+              userId: parsedUserId,
+              gameId: parsedGameId
+            })
+        // Esegui il reset dei campi
+        this.review.rating = '';
+        this.review.description = '';
+        this.characterCount = 0;
+      } catch (error) {
+        this.errorMessage = error.response.data.message;
+      } finally {
+        this.isSubmitting = false;
+      }
+    }
+  },
 };
 </script>
 
 <style scoped>
 .container {
-    max-width: 500px;
-    margin: 100px auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+  max-width: 500px;
+  margin: 100px auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 
 h1 {
-    font-size: 24px;
-    margin-bottom: 30px;
+  font-size: 24px;
+  margin-bottom: 30px;
 }
 
 .btn-block {
-    margin-top: 20px;
+  margin-top: 20px;
 }
+.error-message {
+  color: red;
+  margin-top: 20px;
+}
+
 </style>
