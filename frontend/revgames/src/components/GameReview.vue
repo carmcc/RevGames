@@ -1,8 +1,7 @@
 <template>
   <div>
     <div class="container-mt-3">
-    <h1>pippo</h1>
-    <h1 class="animate__animated animate__fadeInUp animate__delay-1s">recensioni di {{game.title}}</h1>
+    <h1 class="animate__animated animate__fadeInUp animate__delay-1s">{{ titoloPagina }}</h1>
     <div class=" game-banner animate__animated animate__fadeInUp animate__delay-0.5s">
       <div class="game-banner-image">
         <img :src="cardBannerUrl" :alt="game.title" />
@@ -18,6 +17,7 @@
           <ReviewComponent v-for="review in reviewList" :key="review.id" :review="review" />
         </div>
       </div>
+        <button class ="add-review" @click="navigateToAddReview" v-if="isLogged">Aggiungi Recensione</button>
     </div>
   </div>
   </div>
@@ -26,6 +26,7 @@
 <script>
 import ReviewComponent from "@/components/ReviewComponent.vue";
 import instance from "@/axios";
+import store from "@/store";
 
 export default {
   name: 'GameReview',
@@ -34,6 +35,10 @@ export default {
       type: String,
       required: true,
     },
+    receivedUserId: {   //this.receivedUserId è l'id dell'utente loggato
+      Type: String,
+      required: false
+    }
   }, components: {
     ReviewComponent,
   },
@@ -49,6 +54,9 @@ export default {
     };
   },
   computed: {
+      isLogged() {
+          return store.state.isLogged;
+      },
     /**
      * Estrae dai file locali l'immagine indicata dal percorso presente tra i parametri di game
      *
@@ -61,9 +69,33 @@ export default {
   async created() {
     this.getGameById(this.receivedGameId)
 
-    this.setReviewListForGenericUser()
+    await instance.get('/api/protected')  //verifica dell'utente loggato e assegnamento valore loggedUsername
+        .then(response => {
+          this.loggedUsername = response.data.username;
+
+          return instance.get(`/users/getUserIdByUsername/${this.loggedUsername}`); //dopo aver verificato l'utente, trovo l'id
+        }).then(response2 => {
+          this.loggedId = response2.data.userId;
+        }).catch(error => {
+          console.error(error);
+        });
+
+    if(!store.state.viewPressed)
+        this.visualizzazioneNormale()
+    else
+        this.visualizzazioneLoggata()
   },
   methods: {
+      navigateToAddReview() {
+          // Utilizza il router per navigare alla pagina per aggiungere una recensione
+          this.$router.push({
+              name: 'AddReview',
+              params: {
+                  idUser: this.loggedId,
+                  idGame: this.receivedGameId,
+              },
+          });
+      },
     /**
      * Effettua una query al database per ottenere informazioni riguardo al gioco selezionato
      *
@@ -83,13 +115,27 @@ export default {
     /**
      * Visualizza tutte le recensioni del gioco ef imposta un titolo generico.
      */
-    setReviewListForGenericUser() {
+    visualizzazioneNormale() {
+
+      this.titoloPagina = "Recensioni di " + this.game.title
 
       instance.get(`/review/getAllReviewsOfGame/${this.receivedGameId}`)
           .then(response =>{
             this.reviewList = response.data
           })
     },
+
+    /**
+     * Visualizza tutte le recensioni che l'utente ha fatto del gioco ed inposta un titolo col suo nome.
+     */
+    visualizzazioneLoggata() {
+      this.titoloPagina = "Recensioni di "+ this.game.title + " di " + this.loggedUsername
+
+      instance.get(`/review/getAllReviewsOfGameAndUser/${this.receivedGameId}/${this.loggedId}`)
+          .then(response =>{
+            this.reviewList = response.data
+          })
+    }
   }
 }
 </script>
@@ -131,6 +177,15 @@ export default {
 .album {
   padding-top: 40px;
   padding-bottom: 40px;
+}
+.add-review {
+  background-color: #007bff;
+  border-color: #007bff;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 20px;
+  margin: 20px;
 }
 
 </style>
