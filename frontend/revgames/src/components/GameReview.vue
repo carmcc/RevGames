@@ -17,7 +17,7 @@
           <ReviewComponent v-for="review in reviewList" :key="review.id" :review="review" />
         </div>
       </div>
-        <button @click="navigateToAddReview" v-if=isLogged>Aggiungi Recensione</button>
+        <button class ="add-review" @click="navigateToAddReview" v-if=isLogged>Aggiungi Recensione</button>
     </div>
   </div>
   </div>
@@ -183,6 +183,15 @@ export default {
 .album {
   padding-top: 40px;
   padding-bottom: 40px;
+}
+.add-review {
+  background-color: #007bff;
+  border-color: #007bff;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 20px;
+  margin: 20px;
 }
 
 </style>

@@ -80,7 +80,7 @@ exports.addGame = async (req, res) => {
 
             const user = await User.findOne({where: {username: req.user.username}});
             if (!user.isAdmin)
-                return res.status(401).send({message: 'Unauthorized', status: 401});
+                return res.status(401).send({message: 'Unauthorized. Only admins can add a game!', status: 401});
 
             const newGame = await Game.create({title, description, rating, url});
             await newGame.save();

@@ -3,7 +3,7 @@
 <!--    <div class="review-body">-->
 <!--      <P class="review-body">{{nomeUtente}} {{review.rating}}/5</p>-->
 <!--      <p class="review-text">{{ review.description }}</p>-->
-<!--      <div class="d-flex justify-content-between align-items-center">-->
+<!--      <div class="d-flex justify-description-between align-items-center">-->
 <!--      </div>-->
 <!--    </div>-->
 <!--  </div>-->
@@ -59,10 +59,13 @@ export default {
   border-radius: 8px;
   transition: transform 0.2s ease-in-out;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  margin-bottom: 20px;
 }
 
 .review-box:hover{
+  padding: 25px;
   transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
 }
 
 .review-header {
