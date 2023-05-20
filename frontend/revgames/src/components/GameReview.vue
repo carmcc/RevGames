@@ -1,7 +1,8 @@
 <template>
   <div>
     <div class="container-mt-3">
-    <h1 class="animate__animated animate__fadeInUp animate__delay-1s">{{ titoloPagina }}</h1>
+      <h1>.</h1>
+      <h1 class="animate__animated animate__fadeInUp animate__delay-1s">{{ titoloPagina }}</h1>
     <div class=" game-banner animate__animated animate__fadeInUp animate__delay-0.5s">
       <div class="game-banner-image">
         <img :src="cardBannerUrl" :alt="game.title" />
@@ -9,6 +10,7 @@
       <div class="game-banner-content">
         <h2>{{ game.title }}</h2>
         <p class="game-description">{{ game.description }}</p>
+        <p class="game-rating">{{ratingView}} {{averageRating}}/5</p>
       </div>
     </div>
     <div class="album py-5 bg-light animate__animated animate__fadeInUp animate__delay-1s">
@@ -44,8 +46,11 @@ export default {
   },
   data() {
     return {
+      titoloPagina: "",
       rating: null,   //media dei voti generali
       reviewList: [], // Inizializza un array vuoto per le recensioni
+      averageRating: 0,
+      ratingView: "",   //testo che precede il valore di rating
       game: {   //game serve per il titolo e l'immagine del gioco
         bannerImageUrl: "",
         description: "",
@@ -115,27 +120,45 @@ export default {
     /**
      * Visualizza tutte le recensioni del gioco ef imposta un titolo generico.
      */
-    visualizzazioneNormale() {
+    async visualizzazioneNormale() {
 
       this.titoloPagina = "Recensioni di " + this.game.title
 
-      instance.get(`/review/getAllReviewsOfGame/${this.receivedGameId}`)
+      await instance.get(`/review/getAllReviewsOfGame/${this.receivedGameId}`)
           .then(response =>{
             this.reviewList = response.data
           })
+      this.ratingView = "rating:"
+      this.setAverageRating()   //imposto la media di tutte le recensioni
     },
 
     /**
      * Visualizza tutte le recensioni che l'utente ha fatto del gioco ed inposta un titolo col suo nome.
      */
-    visualizzazioneLoggata() {
+    async visualizzazioneLoggata() {
       this.titoloPagina = "Recensioni di "+ this.game.title + " di " + this.loggedUsername
 
-      instance.get(`/review/getAllReviewsOfGameAndUser/${this.receivedGameId}/${this.loggedId}`)
+      await instance.get(`/review/getAllReviewsOfGameAndUser/${this.receivedGameId}/${this.loggedId}`)
           .then(response =>{
             this.reviewList = response.data
           })
-    }
+      this.ratingView = "your rating:"
+      this.setAverageRating()   //imposto la media delle recensioni effettuate dall'utente loggato
+    },
+
+    /**
+     * Calcola la media dei rating delle recensioni presenti in reviewList e salva il risultato in averageRating
+     */
+    setAverageRating() {
+      let average = 0
+
+      for(let i = 0; i < this.reviewList.length; i++) {   //calcolo la media
+        average = average + this.reviewList[i].rating
+      }
+      average = average / this.reviewList.length
+
+      this.averageRating = average
+    },
   }
 }
 </script>
