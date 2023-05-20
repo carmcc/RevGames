@@ -8,7 +8,8 @@
         <!--        <router-link to="/signup">Play</router-link>-->
         <div class="d-flex justify-content-between align-items-center">
           <div class="btn-group">
-            <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
+            <button type="button" class="btn btn-sm btn-outline-secondary"
+                    @click.stop="navigateToGameReviewsForLoggedUser">View</button>
             <button type="button" class="btn btn-sm btn-outline-secondary" style="cursor: pointer">Edit</button>
           </div>
           <small class="text-muted">9 mins</small>
@@ -38,10 +39,9 @@ export default {
     navigateToGameReviews() {
       this.$router.push(`/gameReview/${this.card.id}`);
     },
-    // navigateToGameReviewsForLoggedUser() {
-    //   this.$router.push(`/gameReview/${this.card.id}/
-    //     ${instance.get(`/users/getUserIdByUsername/${localStorage.getItem('username')}`)}`); //TODO non implementato
-    // }
+    navigateToGameReviewsForLoggedUser() {
+      this.$router.push(`/gameReviewForLoggedUser/${this.card.id}`);
+    }
   }
 }
 </script>

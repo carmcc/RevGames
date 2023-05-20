@@ -6,6 +6,7 @@ import ErrorPage from "@/components/ErrorPage.vue";
 import About from "@/components/About.vue";
 import AddGame from "@/components/AddGame.vue";
 import GameReview from "@/components/GameReview.vue";
+import GameReviewForLoggedUser from "@/components/GameReviewForLoggedUser.vue";
 import AddReview from "@/components/AddReview.vue";
 import { createRouter, createWebHistory } from "vue-router";
 import store from './store.js';
@@ -85,9 +86,9 @@ const router = createRouter({
             },
         },
         {
-            name: "GameReviewForLoggedUsers",
-            component: GameReview,
-            path: "/gameReview/:receivedGameId/:receivedUserId",
+            name: "GameReviewForLoggedUser",
+            component: GameReviewForLoggedUser,
+            path: "/gameReviewForLoggedUser/:receivedGameId",
             props: true,
             meta: {
                 hideNavbar: false,

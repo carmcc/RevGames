@@ -1,7 +1,8 @@
 <template>
   <div>
     <div class="container-mt-3">
-    <h1 class="animate__animated animate__fadeInUp animate__delay-1s">{{ titoloPagina }}</h1>
+    <h1>pippo</h1>
+    <h1 class="animate__animated animate__fadeInUp animate__delay-1s">recensioni di {{game.title}}</h1>
     <div class=" game-banner animate__animated animate__fadeInUp animate__delay-0.5s">
       <div class="game-banner-image">
         <img :src="cardBannerUrl" :alt="game.title" />
@@ -17,7 +18,6 @@
           <ReviewComponent v-for="review in reviewList" :key="review.id" :review="review" />
         </div>
       </div>
-        <button class ="add-review" @click="navigateToAddReview" v-if=isLogged>Aggiungi Recensione</button>
     </div>
   </div>
   </div>
@@ -26,27 +26,20 @@
 <script>
 import ReviewComponent from "@/components/ReviewComponent.vue";
 import instance from "@/axios";
-import store from "@/store";
 
 export default {
   name: 'GameReview',
   props: {
-    receivedGameId: {   //this.receivedGameIdid è l'id del gioco sul quale si ha cliccato per accedere alla pagina
+    receivedGameId: {   //this.receivedGameId è l'id del gioco di cui si vogliono vedere le recensioni
       type: String,
       required: true,
     },
-    receivedUserId: {   //this.receivedUserId è l'id dell'utente loggato
-      Type: String,
-      required: false
-    }
   }, components: {
     ReviewComponent,
   },
   data() {
     return {
-      loggedUsername : null, //Questo valore rimarrà "null" se l'utente non è loggato
-      loggedId : null,       //questo valore rimarrà "null" se l'utente non è loggato
-      titoloPagina: null,
+      rating: null,   //media dei voti generali
       reviewList: [], // Inizializza un array vuoto per le recensioni
       game: {   //game serve per il titolo e l'immagine del gioco
         bannerImageUrl: "",
@@ -56,9 +49,6 @@ export default {
     };
   },
   computed: {
-      isLogged() {
-          return store.state.isLogged;
-      },
     /**
      * Estrae dai file locali l'immagine indicata dal percorso presente tra i parametri di game
      *
@@ -69,39 +59,11 @@ export default {
     }
   },
   async created() {
-    // await store.dispatch('checkLogin');
-
     this.getGameById(this.receivedGameId)
 
-    await instance.get('/api/protected')  //verifica dell'utente loggato e assegnamento valore loggedUsername
-        .then(response => {
-          this.loggedUsername = response.data.username;
-
-          return instance.get(`/users/getUserIdByUsername/${this.loggedUsername}`); //dopo aver verificato l'utente, trovo l'id
-        }).then(response2 => {
-          this.loggedId = response2.data.userId;
-        }).catch(error => {
-          console.error(error);
-        });
-
-    if(this.loggedUsername == null)
-    {
-      this.visualizzazioneNormale()
-    } else {
-      this.visualizzazioneLoggata()
-    }
+    this.setReviewListForGenericUser()
   },
   methods: {
-      navigateToAddReview() {
-          // Utilizza il router per navigare alla pagina per aggiungere una recensione
-          this.$router.push({
-              name: 'AddReview',
-              params: {
-                  idUser: this.loggedId,
-                  idGame: this.receivedGameId,
-              },
-          });
-      },
     /**
      * Effettua una query al database per ottenere informazioni riguardo al gioco selezionato
      *
@@ -121,27 +83,13 @@ export default {
     /**
      * Visualizza tutte le recensioni del gioco ef imposta un titolo generico.
      */
-    visualizzazioneNormale() {
-
-      this.titoloPagina = "Recensioni di " + this.game.title
+    setReviewListForGenericUser() {
 
       instance.get(`/review/getAllReviewsOfGame/${this.receivedGameId}`)
           .then(response =>{
             this.reviewList = response.data
           })
     },
-
-    /**
-     * Visualizza tutte le recensioni che l'utente ha fatto del gioco ed inposta un titolo col suo nome.
-     */
-    visualizzazioneLoggata() {
-      this.titoloPagina = "Recensioni di "+ this.game.title + " di " + this.loggedUsername
-
-      instance.get(`/review/getAllReviewsOfGameAndUser/${this.receivedGameId}/${this.loggedId}`)
-          .then(response =>{
-            this.reviewList = response.data
-          })
-    }
   }
 }
 </script>
@@ -184,15 +132,5 @@ export default {
   padding-top: 40px;
   padding-bottom: 40px;
 }
-.add-review {
-  background-color: #007bff;
-  border-color: #007bff;
-  color: #fff;
-  padding: 10px 20px;
-  border-radius: 5px;
-  font-size: 20px;
-  margin: 20px;
-}
 
 </style>
-
