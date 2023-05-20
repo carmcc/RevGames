@@ -53,14 +53,14 @@ export default {name: "CardGame", props: {
     await instance.get(`/review/getAllReviewsOfGame/${this.card.id}`)
         .then(response =>{
           reviewList = response.data    //ottengo la lista recensioni del gioco
+
+          for(let i=0; i < reviewList.length; i++) {    //calcolo la media
+            average = average + reviewList[i].rating
+          }
+          average = average / reviewList.length
+
+          this.averageRating = average  //imposto il risultato
         })
-
-    for(let i=0; i < reviewList.length; i++) {    //calcolo la media
-      average = average + reviewList[i].rating
-    }
-    average = average / reviewList.length
-
-    this.averageRating = average  //imposto il risultato
   },
   methods: {
     navigateToGameReviews() {
