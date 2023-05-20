@@ -1,28 +1,28 @@
 <template>
-    <div class="container">
-        <h1 class="text-center">Nuova Recensione di {{username}}</h1>
-        <div class="form-group">
-            <label for="rating">Rating:</label>
-            <select class="form-control" v-model="review.rating">
-                <option value="">Seleziona un rating</option>
-                <option value="1">1 stella</option>
-                <option value="2">2 stelle</option>
-                <option value="3">3 stelle</option>
-                <option value="4">4 stelle</option>
-                <option value="5">5 stelle</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label for="content">Contenuto:</label>
-            <textarea class="form-control" rows="5" v-model="review.description" @input="limitCharacters"></textarea>
-            <small class="text-muted">Caratteri: {{ characterCount }}/255</small>
-        </div>
-
-        <button class="btn btn-primary btn-block" type="submit" @click="submitReview" :disabled="isSubmitting">Invia Recensione</button>
-        <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
-
+  <div class="container">
+    <h1 class="text-center">Nuova Recensione di {{loggedUsername}}</h1>
+    <div class="form-group">
+      <label for="rating">Rating:</label>
+      <select class="form-control" v-model="review.rating">
+        <option value="">Seleziona un rating</option>
+        <option value="1">1 stella</option>
+        <option value="2">2 stelle</option>
+        <option value="3">3 stelle</option>
+        <option value="4">4 stelle</option>
+        <option value="5">5 stelle</option>
+      </select>
     </div>
+
+    <div class="form-group">
+      <label for="content">Contenuto:</label>
+      <textarea class="form-control" rows="5" v-model="review.description" @input="limitCharacters"></textarea>
+      <small class="text-muted">Caratteri: {{ characterCount }}/255</small>
+    </div>
+
+    <button class="btn btn-primary btn-block" type="submit" @click="submitReview" :disabled="isSubmitting">Invia Recensione</button>
+    <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
+
+  </div>
 </template>
 
 <script>
@@ -30,6 +30,8 @@ import instance from '@/axios.js';
 export default {
   data() {
     return {
+      loggedUsername : null,
+      loggedId : null,
       review: {
         rating: null,
         description: '',
@@ -39,24 +41,47 @@ export default {
       errorMessage: ''
     };
   },
-  computed: {
-    username() {
-      return localStorage.getItem('username');
-    }
+  async created() {
+    await this.setUser()
   },
   methods: {
+    /**
+     * Imposta userId e userID della persona loggata
+     */
+    async setUser() {
+      await instance.get('/api/protected')  //assegnamento valore loggedUsername
+          .then(response => {
+            this.loggedUsername = response.data.username;
+
+            return instance.get(`/users/getUserIdByUsername/${this.loggedUsername}`); //dopo aver identificato l'utente, ottengo l'id
+          }).then(response2 => {
+            this.loggedId = response2.data.userId;
+          }).catch(error => {
+            console.error(error);
+          });
+    },
+
+    /**
+     * Stabilisce un limite di caratteri che l'utente può inserire nel commento
+     */
     limitCharacters() {
       if (this.review.description.length > 255) {
         this.review.description = this.review.description.slice(0, 255);
       }
       this.characterCount = this.review.description.length;
     },
+
+    /**
+     * Metodo relativo all'invio della recensione.
+     *
+     * @return {Promise<void>}
+     */
     async submitReview() {
       this.isSubmitting = true;
       try {
         // Logica per inviare la recensione al backend
         const parsedRating = parseInt(this.review.rating, 10);
-        const parsedUserId = parseInt(this.$route.params.idUser, 10);
+        const parsedUserId = parseInt(this.loggedId, 10);
         const parsedGameId = parseInt(this.$route.params.idGame, 10);
         await instance.post('/review/addReview',
             {
@@ -74,7 +99,7 @@ export default {
       } finally {
         this.isSubmitting = false;
       }
-    }
+    },
   },
 };
 </script>

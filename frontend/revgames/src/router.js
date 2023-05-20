@@ -109,7 +109,7 @@ const router = createRouter({
         {
             name: "AddReview",
             component: AddReview,
-            path: "/addReview/:idUser/:idGame",
+            path: "/addReview/:idGame",
             props: true,
             meta: {
                 hideNavbar: false,

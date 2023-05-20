@@ -65,18 +65,9 @@ export default {
 
     this.getGameById(this.receivedGameId)
 
-    await instance.get('/api/protected')  //assegnamento valore loggedUsername
-        .then(response => {
-          this.loggedUsername = response.data.username;
+    await this.setUser()
 
-          return instance.get(`/users/getUserIdByUsername/${this.loggedUsername}`); //dopo aver identificato l'utente, ottengo l'id
-        }).then(response2 => {
-          this.loggedId = response2.data.userId;
-        }).catch(error => {
-          console.error(error);
-        });
-
-      this.setReviewListForLoggedUser()
+    this.setReviewListForLoggedUser()
   },
   methods: {
     /**
@@ -86,7 +77,6 @@ export default {
       this.$router.push({
         name: 'AddReview',
         params: {
-          idUser: this.loggedId,
           idGame: this.receivedGameId,
         },
       });
@@ -106,6 +96,21 @@ export default {
           }).catch(error => {
         console.log("Utente non loggato: "+error);
       });
+    },
+    /**
+     * Imposta username e userId dell'utente loggato
+     */
+    async setUser() {
+      await instance.get('/api/protected')  //assegnamento valore loggedUsername
+          .then(response => {
+            this.loggedUsername = response.data.username;
+
+            return instance.get(`/users/getUserIdByUsername/${this.loggedUsername}`); //dopo aver identificato l'utente, ottengo l'id
+          }).then(response2 => {
+            this.loggedId = response2.data.userId;
+          }).catch(error => {
+            console.error(error);
+          });
     },
 
     /**
