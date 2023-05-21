@@ -105,15 +105,17 @@ export default {
      *
      * @param gameId
      */
-    getGameById(gameId) {
-      instance.get(`/games/getGameById/${gameId}`)   //definizione del gioco selezionato
-          .then(response => {
-            this.game.title = response.data.title;
-            this.game.bannerImageUrl = response.data.url;
-            this.game.description = response.data.description;
-          }).catch(() => {
-        this.$router.push("/error");
-      });
+    async getGameById(gameId) {
+        await instance.get(`/games/getGameById/${gameId}`)   //definizione del gioco selezionato
+            .then(response => {
+                if(response.status === 200) {
+                    this.game.title = response.data.title;
+                    this.game.bannerImageUrl = response.data.url;
+                    this.game.description = response.data.description;
+                }
+            }).catch(() => {
+            this.$router.push("/error");
+        });
     },
 
     /**
@@ -126,9 +128,7 @@ export default {
       await instance.get(`/review/getAllReviewsOfGame/${this.receivedGameId}`)
           .then(response =>{
             this.reviewList = response.data
-          }).catch(() => {
-        this.$router.push("/error");
-          });
+          })
       this.ratingView = "rating:"
       this.setAverageRating()   //imposto la media di tutte le recensioni
     },
@@ -142,9 +142,7 @@ export default {
       await instance.get(`/review/getAllReviewsOfGameAndUser/${this.receivedGameId}/${this.loggedId}`)
           .then(response =>{
             this.reviewList = response.data
-          }).catch(() => {
-              this.$router.push("/error");
-          });
+          })
       this.ratingView = "your rating:"
       this.setAverageRating()   //imposto la media delle recensioni effettuate dall'utente loggato
     },
