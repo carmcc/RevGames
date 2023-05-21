@@ -28,7 +28,7 @@ exports.getGameById = async (req, res) => {
     try
     {
         const game = await Game.findByPk(req.params.id);
-        if (game === null)
+        if (!game)
             return res.status(404).send({message: 'Game not found', status: 404});
         return res.status(200).json(game);
     }
@@ -47,7 +47,7 @@ exports.getGameByTitle = async (req, res) => {
     try
     {
         const game = await Game.findOne({where: { title: req.params.title}});
-        if (game === null)
+        if (!game)
             return res.status(404).send({message: 'Game not found', status: 404});
         return res.status(200).json(game);
     }
@@ -63,7 +63,7 @@ exports.getGameByTitle = async (req, res) => {
  * @returns {Promise<*>} status code 201 if the game is created, 400 if the request is not valid, 500 if an error occurs
  */
 exports.addGame = async (req, res) => {
-    const {title, description, rating, url} = req.body;
+    const {title, description, url} = req.body;
 
     if(title === undefined || title === '' || description === '' || description === undefined || url==='' || url === undefined)
         return res.status(400).send({message: 'Title, description, rating or url missing', status: 400});
