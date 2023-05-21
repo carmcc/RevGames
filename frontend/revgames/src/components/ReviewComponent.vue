@@ -6,10 +6,7 @@
                     <b>{{nomeUtente}}</b> {{review.rating}}/5
                 </p>
                 <p class="review-text" style="overflow: hidden; word-wrap: break-word;">{{review.description}}</p>
-<!--                <div class="d-flex justify-content-between align-items-center">-->
-<!--                </div>-->
             </div>
-            <button type="button" class="btn btn-sm btn-outline-secondary" v-if="isLogged" style="cursor: pointer" @click.stop="confirmDelete">Delete</button>
         </div>
         <UpdateReview v-if="isModify" :review="review" @recensione-inviata="hideUpdateReview" />
     </div>
@@ -72,30 +69,11 @@ export default {
           });
       },
     async modifyReview() {
-        // console.log(this.usernameByIdReview);
-        // console.log(this.usernameByAccess);
         if(this.usernameByIdReview === this.usernameByAccess)
           this.isModify = !this.isModify;
     },
       hideUpdateReview() {
           this.isModify = false;
-      },
-      deletePressed() {
-          if(this.usernameByIdReview === this.usernameByAccess){
-              instance.delete(`/reviews/deleteReview/${this.review.id}`)
-                  .then(() => {
-                      console.log("Recensione eliminato con successo");
-                      window.location.reload();
-                  })
-                  .catch(() => {
-                      console.log("Errore durante l'eliminazione della recensione");
-                  });
-          }
-      },
-      confirmDelete() {
-          if (confirm("Are you sure you want to delete?")) {
-              this.deletePressed();
-          }
       }
   },
 
