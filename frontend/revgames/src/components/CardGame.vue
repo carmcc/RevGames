@@ -7,9 +7,9 @@
         <p class="card-text">rating: {{averageRating}}/5</p>
         <div class="d-flex justify-content-between align-items-center">
           <div class="btn-group">
-            <button type="button" class="btn btn-sm btn-outline-secondary" v-if="isLogged" @click.stop="viewPressed">My Reviews</button>
-            <button type="button" class="btn btn-sm btn-outline-secondary" v-if="isLogged && isAdministrator" style="cursor: pointer" @click.stop="editPressed">Edit</button>
-              <button type="button" class="btn btn-sm btn-outline-secondary" v-if="isLogged && isAdministrator" style="cursor: pointer" @click.stop="deletePressed">Delete</button>
+              <button type="button" class="btn btn-sm btn-outline-secondary" v-if="isLogged" @click.stop="viewPressed">My Reviews</button>
+              <button type="button" class="btn btn-sm btn-outline-secondary" v-if="isLogged && isAdministrator" style="cursor: pointer" @click.stop="editPressed">Edit</button>
+              <button type="button" class="btn btn-sm btn-outline-secondary" v-if="isLogged && isAdministrator" style="cursor: pointer" @click.stop="confirmDelete">Delete</button>
           </div>
 <!--          <small class="text-muted">9 mins</small>-->
         </div>
@@ -98,6 +98,11 @@ export default {name: "CardGame",
                 });
         }
     },
+      confirmDelete() {
+          if (confirm("Are you sure you want to delete?")) {
+              this.deletePressed();
+          }
+      },
     hideUpdateGame() {
         this.isModify = false
     }
