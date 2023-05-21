@@ -19,7 +19,7 @@
             <small class="text-muted">Caratteri: {{ characterCount }}/255</small>
         </div>
 
-        <button class="btn btn-primary btn-block" type="submit" @click="submitReview">Invia Recensione</button>
+        <button class="btn btn-primary btn-block" type="submit" :disabled="isSubmitting" @click="submitReview">Invia Recensione</button>
         <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
     </div>
 </template>
