@@ -71,7 +71,7 @@ export default {
     }
   },
   async created() {
-    this.getGameById(this.receivedGameId)
+    await this.getGameById(this.receivedGameId)
 
     await instance.get('/api/protected')  //verifica dell'utente loggato e assegnamento valore loggedUsername
         .then(response => {
@@ -111,8 +111,8 @@ export default {
             this.game.title = response.data.title;
             this.game.bannerImageUrl = response.data.url;
             this.game.description = response.data.description;
-          }).catch(error => {
-        console.log("Utente non loggato: "+error);
+          }).catch(() => {
+        this.$router.push("/error");
       });
     },
 
@@ -126,7 +126,9 @@ export default {
       await instance.get(`/review/getAllReviewsOfGame/${this.receivedGameId}`)
           .then(response =>{
             this.reviewList = response.data
-          })
+          }).catch(() => {
+        this.$router.push("/error");
+          });
       this.ratingView = "rating:"
       this.setAverageRating()   //imposto la media di tutte le recensioni
     },
@@ -140,7 +142,9 @@ export default {
       await instance.get(`/review/getAllReviewsOfGameAndUser/${this.receivedGameId}/${this.loggedId}`)
           .then(response =>{
             this.reviewList = response.data
-          })
+          }).catch(() => {
+              this.$router.push("/error");
+          });
       this.ratingView = "your rating:"
       this.setAverageRating()   //imposto la media delle recensioni effettuate dall'utente loggato
     },
