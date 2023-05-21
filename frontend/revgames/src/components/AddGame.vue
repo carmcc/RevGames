@@ -11,10 +11,6 @@
                 <textarea id="description" v-model="game.description" required></textarea>
             </div>
             <div class="form-group">
-                <label for="rating">Valutazione</label>
-                <input type="number" id="rating" v-model="game.rating" min="1" max="5" required>
-            </div>
-            <div class="form-group">
                 <label for="url">URL</label>
                 <input type="text" id="url" v-model="game.url" required>
             </div>
@@ -33,7 +29,6 @@ export default {
             game: {
                 title: '',
                 description: '',
-                rating: null,
                 url: '',
             },
         };
@@ -45,14 +40,12 @@ export default {
             await instance.post('/games/addGame', {
                 title: this.game.title,
                 description: this.game.description,
-                rating: this.game.rating,
                 url: this.game.url
             });
 
             // Dopo l'inserimento, puoi ripulire il form reimpostando i valori
             this.game.title = '';
             this.game.description = '';
-            this.game.rating = null;
             this.game.url = '';
         },
     },

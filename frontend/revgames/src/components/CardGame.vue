@@ -9,20 +9,26 @@
         <div class="d-flex justify-content-between align-items-center">
           <div class="btn-group">
             <button type="button" class="btn btn-sm btn-outline-secondary" v-if="isLogged" @click.stop="viewPressed">My Reviews</button>
-            <button type="button" class="btn btn-sm btn-outline-secondary" style="cursor: pointer">Edit</button>
+            <button type="button" class="btn btn-sm btn-outline-secondary" v-if="isLogged && isAdministrator" style="cursor: pointer" @click.stop="editPressed">Edit</button>
           </div>
           <small class="text-muted">9 mins</small>
         </div>
       </div>
+
     </div>
+      <UpdateGame v-if="isModify" :game="card"/>
+
   </div>
 </template>
 
 <script>
 import store from '../store';
 import instance from "@/axios";
+import UpdateGame from "@/components/UpdateGame.vue";
 
-export default {name: "CardGame", props: {
+export default {name: "CardGame",
+    components: {UpdateGame},
+    props: {
     card: {
       type: Object,
       required: true
@@ -30,7 +36,8 @@ export default {name: "CardGame", props: {
   },
   data() {
     return {
-      averageRating: 0
+      averageRating: 0,
+      isModify: false
     }
   },
   computed: {
@@ -39,6 +46,9 @@ export default {name: "CardGame", props: {
     },
     isLogged(){
       return store.state.isLogged
+    },
+      isAdministrator(){
+      return store.state.isAdministrator
     },
     // averageRating() {
     //   let output = this.getAverageRating()
@@ -71,6 +81,11 @@ export default {name: "CardGame", props: {
     viewPressed() {
       store.commit('setViewPressed', true);
       this.$router.push(`/gameReview/${this.card.id}`);
+    },
+    editPressed() {
+        if(this.isLogged && this.isAdministrator){
+            this.isModify = !this.isModify
+        }
     }
   }}
 </script>
