@@ -8,7 +8,8 @@
             </div>
             <div class="form-group">
                 <label for="description">Descrizione</label>
-                <textarea id="description" style="resize:none" v-model="game.description" required></textarea>
+                <textarea id="description" style="resize:none" v-model="game.description" @input="limitCharacters" required></textarea>
+                <small class="text-muted">Caratteri: {{ characterCount }}/255</small>
             </div>
             <div class="form-group">
                 <label for="url">URL</label>
@@ -32,11 +33,18 @@ export default {
                 description: '',
                 url: '',
             },
-          errorMessage: '',
+            characterCount: 0,
+            errorMessage: '',
           isSubmitting: false
         };
     },
   methods: {
+      limitCharacters() {
+          if (this.game.description.length > 255) {
+              this.game.description = this.game.description.slice(0, 255);
+          }
+          this.characterCount = this.game.description.length;
+      },
     async addGame() {
       this.isSubmitting = true;
       // Esegui qui la logica per l'inserimento del gioco nel tuo backend, ad esempio una chiamata API
@@ -51,8 +59,10 @@ export default {
         this.game.title = '';
         this.game.description = '';
         this.game.url = '';
+          this.characterCount = 0;
 
-        if(response.status === 201)
+
+          if(response.status === 201)
           this.$router.push('/');
         // Dopo l'inserimento, puoi ripulire il form reimpostando i valori
       } catch (error) {

@@ -8,7 +8,9 @@
             </div>
             <div class="form-group">
                 <label for="description">Descrizione</label>
-                <textarea id="description" style="resize:none" v-model="editGame.description" required></textarea>
+                <textarea id="description" style="resize:none" v-model="editGame.description" @input="limitCharacters" required></textarea>
+                <small class="text-muted">Caratteri: {{ characterCount }}/255</small>
+
             </div>
             <div class="form-group">
                 <label for="url">URL</label>
@@ -39,11 +41,18 @@ export default {
                 description: this.game.description,
                 url: this.game.url,
             },
-          errorMessage: '',
-          isSubmitting: false
+            characterCount: 0,
+            errorMessage: '',
+            isSubmitting: false
         };
     },
   methods: {
+      limitCharacters() {
+          if (this.editGame.description.length > 255) {
+              this.editGame.description = this.editGame.description.slice(0, 255);
+          }
+          this.characterCount = this.editGame.description.length;
+      },
     async updateGame() {
       this.isSubmitting = true;
       try {
@@ -53,10 +62,11 @@ export default {
           description: this.editGame.description,
           url: this.editGame.url
         });
-        this.editGame.title = '';
-        this.editGame.description = '';
-        this.editGame.url = '';
-        this.$emit('modifica_gioco_inviata');
+          this.editGame.title = '';
+          this.editGame.description = '';
+          this.editGame.url = '';
+          this.characterCount = 0;
+          this.$emit('modifica_gioco_inviata');
 
 
         if (response.status === 200)
