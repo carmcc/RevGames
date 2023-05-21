@@ -6,10 +6,10 @@ import ErrorPage from "@/components/ErrorPage.vue";
 import About from "@/components/About.vue";
 import AddGame from "@/components/AddGame.vue";
 import GameReview from "@/components/GameReview.vue";
-import GameReviewForLoggedUser from "@/components/GameReviewForLoggedUser.vue";
 import AddReview from "@/components/AddReview.vue";
 import { createRouter, createWebHistory } from "vue-router";
 import store from './store.js';
+import UpdateReview from "@/components/UpdateReview.vue";
 
 
 const router = createRouter({
@@ -86,16 +86,6 @@ const router = createRouter({
             },
         },
         {
-            name: "GameReviewForLoggedUser",
-            component: GameReviewForLoggedUser,
-            path: "/gameReviewForLoggedUser/:receivedGameId",
-            props: true,
-            meta: {
-                hideNavbar: false,
-                isAuthRequired: true,
-            },
-        },
-        {
             name: "ErrorPage",
             component: ErrorPage,
             path: "/:catchAll(.*)", // Definizione della rotta per la pagina di errore 404
@@ -116,6 +106,16 @@ const router = createRouter({
                 isAuthRequired: true,
             },
         },
+        {
+            name: "UpdateReview",
+            component: UpdateReview,
+            path: "/updateReview/",
+            props: true,
+            meta: {
+                hideNavbar: false,
+                isAuthRequired: true,
+            }
+        }
 
     ]
 });
