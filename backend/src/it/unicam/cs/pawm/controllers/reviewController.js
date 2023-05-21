@@ -137,7 +137,7 @@ exports.addReview = async (req, res) => {
  * @returns {Promise<*>} status code 200 if the review is updated, 400 if the request is not valid, 500 if an error occurs
  */
 exports.updateReview = async (req, res) => {
-    const { id, title, description, rating } = req.body;
+    const { id, description, rating } = req.body;
 
     if (typeof (description) !== "string")
         return res.status(400).send({message: 'Invalid description', status: 400});
@@ -152,7 +152,7 @@ exports.updateReview = async (req, res) => {
             if (review === null)
                 return res.status(404).send({message: 'Review not found', status: 404});
             //aggiorno la recensione con i nuovi dati
-            review.title = title;
+            // review.title = title;
             review.description = description;
             review.rating = rating;
             await review.save();
