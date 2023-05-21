@@ -63,7 +63,7 @@ export default {
     padding-top: var(--jumbotron-padding-y);
     padding-bottom: var(--jumbotron-padding-y);
     margin-bottom: 0;
-    background-image: url('../assets/codmw.jpeg');}
+    background-image: url('../assets/wallpaper.jpeg')}
 @media (min-width: 768px) {
     .jumbotron {
         padding-top: calc(var(--jumbotron-padding-y) * 2);
