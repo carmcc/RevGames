@@ -6,21 +6,18 @@ export default {
             members: [
                 {
                     name: "Carmine Marchesani",
-                    //image: "https://randomuser.me/api/portraits/men/1.jpg",
-                    position: "Founder & CEO",
-                    bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce viverra eros nec eros hendrerit, eu faucibus sapien rhoncus. Maecenas sodales euismod ipsum ut maximus."
+                    matricola: "Matricola: 113916",
+                    //bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce viverra eros nec eros hendrerit, eu faucibus sapien rhoncus. Maecenas sodales euismod ipsum ut maximus."
                 },
                 {
                     name: "Patryk Bialowas",
-                    //image: "https://randomuser.me/api/portraits/women/1.jpg",
-                    position: "COO",
-                    bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce viverra eros nec eros hendrerit, eu faucibus sapien rhoncus. Maecenas sodales euismod ipsum ut maximus."
+                    matricola: "Matricola: 113959",
+                    //bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce viverra eros nec eros hendrerit, eu faucibus sapien rhoncus. Maecenas sodales euismod ipsum ut maximus."
                 },
                 {
                     name: "Marco Cocilva",
-                    //image: "https://randomuser.me/api/portraits/men/2.jpg",
-                    position: "CTO",
-                    bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce viverra eros nec eros hendrerit, eu faucibus sapien rhoncus. Maecenas sodales euismod ipsum ut maximus."
+                    matricola: "Matricola: 113965",
+                    //bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce viverra eros nec eros hendrerit, eu faucibus sapien rhoncus. Maecenas sodales euismod ipsum ut maximus."
                 }
             ]
         };
@@ -43,7 +40,7 @@ export default {
                <!--<img :src="member.image"> :alt="member.name"> -->
                 <div class="member-info">
                     <h3>{{ member.name }}</h3>
-                    <p>{{ member.position }}</p>
+                    <p>{{ member.matricola }}</p>
                     <p>{{ member.bio }}</p>
                 </div>
             </div>
