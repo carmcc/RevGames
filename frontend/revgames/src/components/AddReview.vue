@@ -15,7 +15,7 @@
 
     <div class="form-group">
       <label for="content">Contenuto:</label>
-      <textarea class="form-control" rows="5" v-model="review.description" @input="limitCharacters"></textarea>
+      <textarea class="form-control" style="resize:none" rows="5" v-model="review.description" @input="limitCharacters"></textarea>
       <small class="text-muted">Caratteri: {{ characterCount }}/255</small>
     </div>
 

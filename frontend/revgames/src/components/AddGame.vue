@@ -8,7 +8,7 @@
             </div>
             <div class="form-group">
                 <label for="description">Descrizione</label>
-                <textarea id="description" v-model="game.description" required></textarea>
+                <textarea id="description" style="resize:none" v-model="game.description" required></textarea>
             </div>
             <div class="form-group">
                 <label for="url">URL</label>
