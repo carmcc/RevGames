@@ -6,9 +6,10 @@
                     <b>{{nomeUtente}}</b> {{review.rating}}/5
                 </p>
                 <p class="review-text" style="overflow: hidden; word-wrap: break-word;">{{review.description}}</p>
-                <div class="d-flex justify-content-between align-items-center">
-                </div>
+<!--                <div class="d-flex justify-content-between align-items-center">-->
+<!--                </div>-->
             </div>
+            <button type="button" class="btn btn-sm btn-outline-secondary" v-if="isLogged" style="cursor: pointer" @click.stop="confirmDelete">Delete</button>
         </div>
         <UpdateReview v-if="isModify" :review="review" @recensione-inviata="hideUpdateReview" />
     </div>
@@ -19,6 +20,7 @@
 <script>
 import instance from "@/axios";
 import UpdateReview from "@/components/UpdateReview.vue";
+import store from "@/store";
 export default {
   name: "ReviewComponent",
     components: {
@@ -38,6 +40,11 @@ export default {
         usernameByIdReview: "account non più esistente",
     };
   },
+    computed: {
+        isLogged() {
+            return store.state.isLogged
+        },
+    },
   created() {
     instance.get(`/users/getUsernameById/${this.review.userId}`)
         .then(response => {
@@ -72,8 +79,26 @@ export default {
     },
       hideUpdateReview() {
           this.isModify = false;
+      },
+      deletePressed() {
+          if(this.usernameByIdReview === this.usernameByAccess){
+              instance.delete(`/reviews/deleteReview/${this.review.id}`)
+                  .then(() => {
+                      console.log("Recensione eliminato con successo");
+                      window.location.reload();
+                  })
+                  .catch(() => {
+                      console.log("Errore durante l'eliminazione della recensione");
+                  });
+          }
+      },
+      confirmDelete() {
+          if (confirm("Are you sure you want to delete?")) {
+              this.deletePressed();
+          }
       }
-  }
+  },
+
 }
 </script>
 
