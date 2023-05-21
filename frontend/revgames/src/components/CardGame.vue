@@ -59,7 +59,7 @@ export default {name: "CardGame", props: {
           }
           average = average / reviewList.length
 
-          this.averageRating = average  //imposto il risultato
+          this.averageRating = average.toFixed(1)  //imposto il risultato approssimato
         })
   },
   methods: {

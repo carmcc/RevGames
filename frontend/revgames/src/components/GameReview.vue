@@ -86,9 +86,9 @@ export default {
         });
 
     if(!store.state.viewPressed)
-        this.visualizzazioneNormale()
+        await this.visualizzazioneNormale()
     else
-        this.visualizzazioneLoggata()
+        await this.visualizzazioneLoggata()
   },
   methods: {
       navigateToAddReview() {
@@ -157,7 +157,7 @@ export default {
       }
       average = average / this.reviewList.length
 
-      this.averageRating = average
+      this.averageRating = average.toFixed(1)
     },
   }
 }
