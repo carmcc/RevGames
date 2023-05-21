@@ -98,8 +98,15 @@ export default {
         this.errorMessage = error.response.data.message;
       } finally {
         this.isSubmitting = false;
+        this.redirect()
       }
     },
+    /**
+     * Reindirizzamento alla pagina del gioco
+     */
+    redirect() {
+      this.$router.push(`/gameReview/${this.$route.params.idGame}`)
+    }
   },
 };
 </script>

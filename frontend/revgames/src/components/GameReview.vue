@@ -1,7 +1,6 @@
 <template>
   <div>
     <div class="container-mt-3">
-      <h1>.</h1>
       <h1 class="animate__animated animate__fadeInUp animate__delay-1s">{{ titoloPagina }}</h1>
     <div class=" game-banner animate__animated animate__fadeInUp animate__delay-0.5s">
       <div class="game-banner-image">
@@ -164,6 +163,10 @@ export default {
 </script>
 
 <style scoped>
+h1{
+  margin-top: 50px;
+}
+
 .game-banner {
   display: flex;
   align-items: center;
