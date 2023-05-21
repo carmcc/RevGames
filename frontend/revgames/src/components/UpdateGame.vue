@@ -14,7 +14,8 @@
                 <label for="url">URL</label>
                 <input type="text" id="url" v-model="editGame.url" required>
             </div>
-            <button type="submit">Aggiungi gioco</button>
+            <button class="btn btn-lg btn-primary btn-block" type="submit" :disabled="isSubmitting" >Modifica gioco</button>
+            <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
         </form>
     </div>
 </template>
@@ -36,26 +37,38 @@ export default {
                 id: this.game.id,
                 title: this.game.title,
                 description: this.game.description,
-                url: this.game.url
-            }
+                url: this.game.url,
+            },
+          errorMessage: '',
+          isSubmitting: false
         };
     },
-    methods: {
-        async updateGame() {
-            await instance.put('/games/updateGame', {
-                id: this.editGame.id,
-                title: this.editGame.title,
-                description: this.editGame.description,
-                url: this.editGame.url
-            });
+  methods: {
+    async updateGame() {
+      this.isSubmitting = true;
+      try {
+        const response = await instance.put('/games/updateGame', {
+          id: this.editGame.id,
+          title: this.editGame.title,
+          description: this.editGame.description,
+          url: this.editGame.url
+        });
+        this.editGame.title = '';
+        this.editGame.description = '';
+        this.editGame.url = '';
+        this.$emit('modifica_gioco_inviata');
 
-            this.editGame.title = '';
-            this.editGame.description = '';
-            this.editGame.url = '';
-            this.$emit('modifica_gioco_inviata');
 
-        }
+        if (response.status === 200)
+          window.location.reload();
+      }
+      catch (error) {
+        this.errorMessage = error.response.data.message;
+      } finally {
+        this.isSubmitting = false;
+      }
     }
+  }
 }
 </script>
 
@@ -101,5 +114,23 @@ button {
 
 button:hover {
     background-color: #45a049;
+}
+.error-message {
+    color: red;
+    margin-bottom: 20px;
+}
+
+button[type="submit"] {
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+button[type="submit"]:hover {
+  background-color: #0062cc;
 }
 </style>

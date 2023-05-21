@@ -60,7 +60,7 @@ export default {
                 const parsedRating = parseInt(this.editedReview.rating, 10);
                 const parsedReviewId = parseInt(this.review.id, 10);
                 // const parsedGameId = parseInt(this.review.idGame, 10);
-                await instance.put("/review/updateReview", {
+                const response = await instance.put("/review/updateReview", {
                     id: parsedReviewId,
                     rating: parsedRating,
                     description: this.editedReview.description
@@ -70,10 +70,13 @@ export default {
                 this.editedReview.description = '';
                 this.characterCount = 0;
                 this.$emit('recensione-inviata');
+
+              if (response.status === 200)
+                window.location.reload();
             } catch (error) {
-                this.errorMessage = error.response.data.message;
+              this.errorMessage = error.response.data.message;
             } finally {
-                this.isSubmitting = false;
+              this.isSubmitting = false;
             }
         }
     },

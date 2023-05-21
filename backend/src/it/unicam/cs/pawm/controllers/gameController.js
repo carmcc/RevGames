@@ -65,14 +65,12 @@ exports.getGameByTitle = async (req, res) => {
 exports.addGame = async (req, res) => {
     const {title, description, rating, url} = req.body;
 
-    if(title === undefined || title === '' || description === '' || description === undefined || rating === undefined || rating === '' || url==='' || url === undefined)
+    if(title === undefined || title === '' || description === '' || description === undefined || url==='' || url === undefined)
         return res.status(400).send({message: 'Title, description, rating or url missing', status: 400});
     if(title.length < 4 || title.length > 100)
         return res.status(400).send({message: 'Title must be between 4 and 20 characters', status: 400});
     if(description.length < 4 || description.length > 255)
         return res.status(400).send({message: 'Description must be between 4 and 100 characters', status: 400});
-    if(rating < 0 || rating > 5)
-        return res.status(400).send({message: 'Rating must be greater than 0', status: 400});
     if(url.length < 4 || url.length > 100)
         return res.status(400).send({message: 'Url must be between 4 and 100 characters', status: 400});
     verifyAccessToken(req, res , async () => {
@@ -82,7 +80,7 @@ exports.addGame = async (req, res) => {
             if (!user.isAdmin)
                 return res.status(401).send({message: 'Unauthorized. Only admins can add a game!', status: 401});
 
-            const newGame = await Game.create({title, description, rating, url});
+            const newGame = await Game.create({title, description, url});
             await newGame.save();
             return res.status(201).send({message: 'Game created', status: 201});
         } catch (err) {
