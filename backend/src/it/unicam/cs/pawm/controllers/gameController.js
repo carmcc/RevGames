@@ -125,6 +125,25 @@ exports.updateGame = async (req, res) => {
     });
 }
 
+exports.deleteGameById = async (req, res) => {
+    const {id} = req.params;
+    verifyAccessToken(req, res , async () => {
+        try {
+            const user = await User.findOne({where: {username: req.user.username}});
+            if (!user.isAdmin)
+                return res.status(401).send({message: 'Unauthorized. Only admins can delete a game!', status: 401});
+
+            const game = await Game.findOne({where: {id: id}});
+            if (game === null)
+                return res.status(404).send({message: 'Game not found', status: 404});
+            await game.destroy();
+            return res.status(200).send({message: 'Game deleted', status: 200});
+        } catch (err) {
+            return res.status(500).send({error: 'Error deleting game', status: 500});
+        }
+    });
+}
+
 /**
  * Error handler
  * @param req

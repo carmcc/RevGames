@@ -88,7 +88,7 @@ export default {name: "CardGame",
     },
     deletePressed() {
         if(this.isLogged && this.isAdministrator){
-            instance.delete(`/game/deleteGame/${this.card.id}`)
+            instance.delete(`/games/deleteGameById/${this.card.id}`)
                 .then(() => {
                     console.log("Gioco eliminato con successo");
                     window.location.reload();
