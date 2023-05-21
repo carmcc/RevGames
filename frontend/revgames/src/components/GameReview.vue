@@ -1,7 +1,6 @@
 <template>
   <div>
     <div class="container-mt-3">
-      <h1>.</h1>
       <h1 class="animate__animated animate__fadeInUp animate__delay-1s">{{ titoloPagina }}</h1>
     <div class=" game-banner animate__animated animate__fadeInUp animate__delay-0.5s">
       <div class="game-banner-image">
@@ -86,9 +85,9 @@ export default {
         });
 
     if(!store.state.viewPressed)
-        this.visualizzazioneNormale()
+        await this.visualizzazioneNormale()
     else
-        this.visualizzazioneLoggata()
+        await this.visualizzazioneLoggata()
   },
   methods: {
       navigateToAddReview() {
@@ -157,13 +156,17 @@ export default {
       }
       average = average / this.reviewList.length
 
-      this.averageRating = average
+      this.averageRating = average.toFixed(1)
     },
   }
 }
 </script>
 
 <style scoped>
+h1{
+  margin-top: 50px;
+}
+
 .game-banner {
   display: flex;
   align-items: center;

@@ -3,8 +3,9 @@
         <div class="container">
             <h1 class="jumbotron-heading animate__animated animate__fadeInUp animate__delay-0.5s">Benvenuto/a {{username}}</h1>
             <p class="lead text-muted animate__animated animate__fadeInUp animate__delay-1s">
-                Something short and leading about the collection below—its contents, the creator, etc.
-                Make it short and sweet, but not too short so folks don't simply skip over it entirely.</p>
+              RevGames è un sito dedicato a fornire recensioni accurate, e dettagliate sui videogiochi più popolari del momento.
+              Buon divertimento!
+            </p>
         </div>
     </section>
 
