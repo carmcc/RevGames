@@ -36,10 +36,10 @@ exports.register = async (req, res) => {
         //creazione utente
         const newUser = await User.create({username, email, password: hash, isAdmin: req.body.isAdmin});
         await newUser.save();
-        res.status(201).send({message: 'User created', status: 201});
+        return res.status(201).send({message: 'User created', status: 201});
 
     } catch (err) {
-        res.status(500).send({error: 'Error creating user', status: 500});
+        return res.status(500).send({error: 'Error creating user', status: 500});
     }
 }
 
@@ -119,7 +119,7 @@ exports.protectedRoute = async (req, res) => {
             return res.status(401).send({message: 'Unauthorized', status: 401});
         });
     } catch (err) {
-        res.status(500).send({error: 'Error', status: 500});
+        return res.status(500).send({error: 'Error', status: 500});
     }
 }
 
@@ -135,7 +135,7 @@ exports.verifyRefreshToken = async (req, res) => {
             return res.status(200).send({message:'Refresh token validated', username: req.user.username,  status: 200});
         });
     } catch (err) {
-        res.status(500).send({error: 'Error', status: 500});
+        return res.status(500).send({error: 'Error', status: 500});
     }
 }
 
@@ -155,7 +155,7 @@ exports.invalidateRefreshToken = async (req, res) => {
             return res.status(400).send({message: 'Invalid refresh token', status: 400});
         return res.status(200).send({message: 'Refresh token invalidated', status: 200});
     } catch (err) {
-        res.status(500).send({error: 'Error', status: 500});
+        return res.status(500).send({error: 'Error', status: 500});
     }
 }
 
@@ -184,16 +184,16 @@ exports.generateNewTokens = async (req, res) => {
             }
         );
     } catch (err) {
-        res.status(500).send({error: 'Error', status: 500});
+        return res.status(500).send({error: 'Error', status: 500});
     }
 }
 
 exports.getAllUsers = async (req, res) => {
     try{
         const users = await User.findAll()
-        res.status(200).json(users)
+        return res.status(200).json(users)
     } catch (err) {
-        res.status(500).send({error: 'Error', status: 500});
+        return res.status(500).send({error: 'Error', status: 500});
     }
 }
 
@@ -219,8 +219,18 @@ exports.getUserIdByUsername = async (req, res) => {
         const userId = user.id
         return res.status(200).send({userId, status: 200})
     } catch (err) {
-        res.status(500).send({error: 'Error', status: 500})
+        return res.status(500).send({error: 'Error', status: 500})
     }
+}
+
+/**
+ * Error handler
+ * @param req
+ * @param res
+ * @returns {Promise<*>} the error message and the status code
+ */
+exports.error = async (req, res) => {
+    return res.status(500).send({error: 'Error. Path not found', status: 500});
 }
 
 function getRefreshTokenByAccessToken(accessToken) {

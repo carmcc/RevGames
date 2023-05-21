@@ -12,9 +12,9 @@ const User = require("../models/user.js");
 exports.getAllReviews = async (req, res) => {
     try {
         const reviews = await Review.findAll();
-        res.status(200).json(reviews);
+        return res.status(200).json(reviews);
     } catch (err) {
-        res.status(500).send({error: 'Error getting reviews', status: 500});
+        return res.status(500).send({error: 'Error getting reviews', status: 500});
     }
 }
 
@@ -35,10 +35,10 @@ exports.getAllReviewsOfGame = async (req, res) => {
         //se non trovo nessuna recensione
         if (reviews.length === 0)
             return res.status(404).send({message: 'No reviews found', status: 404});
-        res.status(200).json(reviews);
+        return res.status(200).json(reviews);
 
     } catch (err) {
-        res.status(500).send({error:'Error getting reviews', status: 500});
+        return res.status(500).send({error:'Error getting reviews', status: 500});
     }
 }
 
@@ -123,9 +123,9 @@ exports.addReview = async (req, res) => {
             //creazione recensione
             const newReview = await Review.create({description, rating, date: Date.now(), gameId, userId});
             await newReview.save();
-            res.status(201).send({message: 'Review created', status: 201});
+            return res.status(201).send({message: 'Review created', status: 201});
         } catch (err) {
-            res.status(500).send({error: 'Error creating review', status: 500});
+            return res.status(500).send({error: 'Error creating review', status: 500});
         }
     });
 }
@@ -156,13 +156,19 @@ exports.updateReview = async (req, res) => {
             review.description = description;
             review.rating = rating;
             await review.save();
-            res.status(200).send({message: 'Review updated', status: 200});
+            return res.status(200).send({message: 'Review updated', status: 200});
         } catch (err) {
-            res.status(500).send({error: 'Error updating review', status: 500});
+            return res.status(500).send({error: 'Error updating review', status: 500});
         }
     });
 }
 
+/**
+ * Error handler
+ * @param req
+ * @param res
+ * @returns {Promise<*>} status code 404
+ */
 exports.error = (req, res) => {
-    res.status(404).send({error: 'Error. Path not found', status: 404});
+   return res.status(404).send({error: 'Error. Path not found', status: 404});
 }

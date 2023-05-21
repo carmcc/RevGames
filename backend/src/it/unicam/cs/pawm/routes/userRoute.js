@@ -14,6 +14,7 @@ router.get(`/users/getUsernameById/:userId`, userController.getUserNameById)
 router.get(`/users/getUserIdByUsername/:username`, userController.getUserIdByUsername)
 router.get('/verify-refreshToken', userController.verifyRefreshToken)
 router.post('/new-refreshToken', userController.generateNewTokens)
+router.all('/*', userController.error)
 
 //modulo da esportare per le rotte, richiamato in index.js
 module.exports = router
