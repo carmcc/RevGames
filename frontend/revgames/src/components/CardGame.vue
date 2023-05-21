@@ -16,7 +16,7 @@
       </div>
 
     </div>
-      <UpdateGame v-if="isModify" :game="card"/>
+      <UpdateGame v-if="isModify" :game="card" @modifica_gioco_inviata="hideUpdateGame" />
 
   </div>
 </template>
@@ -86,6 +86,9 @@ export default {name: "CardGame",
         if(this.isLogged && this.isAdministrator){
             this.isModify = !this.isModify
         }
+    },
+    hideUpdateGame() {
+        this.isModify = false
     }
   }}
 </script>

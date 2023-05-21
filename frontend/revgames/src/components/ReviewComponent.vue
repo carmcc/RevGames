@@ -1,13 +1,3 @@
-<!--<template>-->
-<!--  <div class="col-md-4">-->
-<!--    <div class="review-body">-->
-<!--      <P class="review-body">{{nomeUtente}} {{review.rating}}/5</p>-->
-<!--      <p class="review-text">{{ review.description }}</p>-->
-<!--      <div class="d-flex justify-description-between align-items-center">-->
-<!--      </div>-->
-<!--    </div>-->
-<!--  </div>-->
-<!--</template>-->
 <template>
   <div class="col-md-4">
     <div class="review-box" @click.stop="modifyReview">
@@ -20,7 +10,7 @@
         </div>
       </div>
     </div>
-      <UpdateReview v-if="isModify" :review="review"/>
+      <UpdateReview v-if="isModify" :review="review" @recensione-inviata="hideUpdateReview" />
   </div>
 </template>
 
@@ -44,7 +34,7 @@ export default {
       nomeUtente : "account non più esistente",
       isModify: false,
         usernameByAccess: "",
-        usernameByIdReview: "",
+        usernameByIdReview: "account non più esistente",
     };
   },
   created() {
@@ -74,11 +64,14 @@ export default {
           });
       },
     async modifyReview() {
-        console.log(this.usernameByIdReview);
-        console.log(this.usernameByAccess);
+        // console.log(this.usernameByIdReview);
+        // console.log(this.usernameByAccess);
         if(this.usernameByIdReview === this.usernameByAccess)
           this.isModify = !this.isModify;
     },
+      hideUpdateReview() {
+          this.isModify = false;
+      }
   }
 }
 </script>

@@ -52,6 +52,8 @@ export default {
             this.editGame.title = '';
             this.editGame.description = '';
             this.editGame.url = '';
+            this.$emit('modifica_gioco_inviata');
+
         }
     }
 }

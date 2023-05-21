@@ -69,11 +69,12 @@ export default {
                 this.editedReview.rating = '';
                 this.editedReview.description = '';
                 this.characterCount = 0;
+                this.$emit('recensione-inviata');
             } catch (error) {
                 this.errorMessage = error.response.data.message;
             } finally {
-            this.isSubmitting = false;
-        }
+                this.isSubmitting = false;
+            }
         }
     },
 };
