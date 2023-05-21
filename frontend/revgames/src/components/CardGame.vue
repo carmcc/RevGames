@@ -9,8 +9,9 @@
           <div class="btn-group">
             <button type="button" class="btn btn-sm btn-outline-secondary" v-if="isLogged" @click.stop="viewPressed">My Reviews</button>
             <button type="button" class="btn btn-sm btn-outline-secondary" v-if="isLogged && isAdministrator" style="cursor: pointer" @click.stop="editPressed">Edit</button>
+              <button type="button" class="btn btn-sm btn-outline-secondary" v-if="isLogged && isAdministrator" style="cursor: pointer" @click.stop="deletePressed">Delete</button>
           </div>
-          <small class="text-muted">9 mins</small>
+<!--          <small class="text-muted">9 mins</small>-->
         </div>
       </div>
 
@@ -83,6 +84,18 @@ export default {name: "CardGame",
     editPressed() {
         if(this.isLogged && this.isAdministrator){
             this.isModify = !this.isModify
+        }
+    },
+    deletePressed() {
+        if(this.isLogged && this.isAdministrator){
+            instance.delete(`/game/deleteGame/${this.card.id}`)
+                .then(() => {
+                    console.log("Gioco eliminato con successo");
+                    window.location.reload();
+                })
+                .catch(() => {
+                    console.log("Errore durante l'eliminazione del gioco");
+                });
         }
     },
     hideUpdateGame() {
