@@ -9,6 +9,7 @@ import GameReview from "@/components/GameReview.vue";
 import AddReview from "@/components/AddReview.vue";
 import { createRouter, createWebHistory } from "vue-router";
 import store from './store.js';
+import UpdateReview from "@/components/UpdateReview.vue";
 
 
 const router = createRouter({
@@ -105,6 +106,16 @@ const router = createRouter({
                 isAuthRequired: true,
             },
         },
+        {
+            name: "UpdateReview",
+            component: UpdateReview,
+            path: "/updateReview/",
+            props: true,
+            meta: {
+                hideNavbar: false,
+                isAuthRequired: true,
+            }
+        }
 
     ]
 });

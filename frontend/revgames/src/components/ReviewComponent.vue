@@ -10,7 +10,7 @@
 <!--</template>-->
 <template>
   <div class="col-md-4">
-    <div class="review-box">
+    <div class="review-box" @click.stop="modifyReview">
       <div class="review-body">
         <p class="review-header">
           <b>{{nomeUtente}}</b> {{review.rating}}/5
@@ -20,14 +20,19 @@
         </div>
       </div>
     </div>
+      <UpdateReview v-if="isModify" :review="review"/>
   </div>
 </template>
 
 
 <script>
 import instance from "@/axios";
+import UpdateReview from "@/components/UpdateReview.vue";
 export default {
   name: "ReviewComponent",
+    components: {
+      UpdateReview
+    },
   props: {
     review: {
       type: Object,
@@ -37,6 +42,9 @@ export default {
   data() {
     return {
       nomeUtente : "account non più esistente",
+      isModify: false,
+        usernameByAccess: "",
+        usernameByIdReview: "",
     };
   },
   created() {
@@ -44,9 +52,33 @@ export default {
         .then(response => {
           this.nomeUtente = response.data.username;
         })
-        .catch(error => {
-          console.error(error);
+        .catch(() => {
+          console.log("Commento anonimo!");
         });
+    this.getUsernameByAccessToken();
+    this.getUsernameById();
+  },
+  methods: {
+       async getUsernameByAccessToken(){
+           await instance.get("/api/protected").then((response) => {
+              this.usernameByAccess = response.data.username;
+          }).catch(() => {
+              console.log("Non sono riuscito a prendere username da access token");
+          });
+      },
+       async getUsernameById(){
+           await instance.get(`/users/getUsernameById/${this.review.userId}`).then((response) => {
+              this.usernameByIdReview= response.data.username;
+          }).catch(() => {
+              console.log("Non sono riuscito a prendere username da id");
+          });
+      },
+    async modifyReview() {
+        console.log(this.usernameByIdReview);
+        console.log(this.usernameByAccess);
+        if(this.usernameByIdReview === this.usernameByAccess)
+          this.isModify = !this.isModify;
+    },
   }
 }
 </script>
