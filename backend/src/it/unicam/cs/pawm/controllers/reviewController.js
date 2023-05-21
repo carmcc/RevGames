@@ -33,7 +33,7 @@ exports.getAllReviewsOfGame = async (req, res) => {
         //cerco tutti i giochi con l'id passato
         const reviews = await Review.findAll({ where: { gameId: req.params.gameId } });
         //se non trovo nessuna recensione
-        if (reviews.length === 0)
+        if (!reviews.length)
             return res.status(404).send({message: 'No reviews found', status: 404});
         return res.status(200).json(reviews);
 
@@ -82,7 +82,7 @@ exports.getAllReviewsOfUserAndGame = async (req, res) => {
         if (!user) {
             return res.status(404).send({message: 'User not found', status: 404 });
         }
-        const reviews = await Review.findAll({ where: {gameId,userId} });
+        const reviews = await Review.findAll({ where: {gameId, userId} });
         if (!reviews.length) {
             return res.status(404).send({message: 'No reviews found for this user', status: 404});
         }

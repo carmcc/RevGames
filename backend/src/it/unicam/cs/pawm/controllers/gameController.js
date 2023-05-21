@@ -28,7 +28,7 @@ exports.getGameById = async (req, res) => {
     try
     {
         const game = await Game.findByPk(req.params.id);
-        if (game === null)
+        if (!game)
             return res.status(404).send({message: 'Game not found', status: 404});
         return res.status(200).json(game);
     }
@@ -47,7 +47,7 @@ exports.getGameByTitle = async (req, res) => {
     try
     {
         const game = await Game.findOne({where: { title: req.params.title}});
-        if (game === null)
+        if (!game)
             return res.status(404).send({message: 'Game not found', status: 404});
         return res.status(200).json(game);
     }
