@@ -1,10 +1,9 @@
 <template>
-  <!--  <router-link to="/signup"/>-->
   <div class="col-md-4">
     <div class="card mb-4 box-shadow" @click.stop="navigateToGameReviews" style="cursor: pointer">
       <img class="card-img-top" :src=cardImageUrl width="508" height="225" alt="{{ card.title }}">
       <div class="card-body">
-        <p class="card-text">{{ card.description }}</p>
+        <p class="card-text" style="overflow: hidden; word-wrap: break-word" >{{ card.description }}</p>
         <p class="card-text">rating: {{averageRating}}/5</p>
         <div class="d-flex justify-content-between align-items-center">
           <div class="btn-group">
@@ -17,7 +16,6 @@
 
     </div>
       <UpdateGame v-if="isModify" :game="card" @modifica_gioco_inviata="hideUpdateGame" />
-
   </div>
 </template>
 

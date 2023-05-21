@@ -1,18 +1,19 @@
 <template>
-  <div class="col-md-4">
-    <div class="review-box" @click.stop="modifyReview">
-      <div class="review-body">
-        <p class="review-header">
-          <b>{{nomeUtente}}</b> {{review.rating}}/5
-        </p>
-        <p class="review-text">{{review.description}}</p>
-        <div class="d-flex justify-content-between align-items-center">
+    <div class="col-md-4">
+        <div class="review-box" @click.stop="modifyReview">
+            <div class="review-body">
+                <p class="review-header">
+                    <b>{{nomeUtente}}</b> {{review.rating}}/5
+                </p>
+                <p class="review-text" style="overflow: hidden; word-wrap: break-word;">{{review.description}}</p>
+                <div class="d-flex justify-content-between align-items-center">
+                </div>
+            </div>
         </div>
-      </div>
+        <UpdateReview v-if="isModify" :review="review" @recensione-inviata="hideUpdateReview" />
     </div>
-      <UpdateReview v-if="isModify" :review="review" @recensione-inviata="hideUpdateReview" />
-  </div>
 </template>
+
 
 
 <script>
