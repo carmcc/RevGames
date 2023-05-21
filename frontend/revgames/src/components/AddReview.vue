@@ -83,7 +83,7 @@ export default {
         const parsedRating = parseInt(this.review.rating, 10);
         const parsedUserId = parseInt(this.loggedId, 10);
         const parsedGameId = parseInt(this.$route.params.idGame, 10);
-        await instance.post('/review/addReview',
+        const response = await instance.post('/review/addReview',
             {
               rating: parsedRating,
               description: this.review.description,
@@ -94,19 +94,16 @@ export default {
         this.review.rating = '';
         this.review.description = '';
         this.characterCount = 0;
+
+        if (response.status === 201)
+          this.$router.push('/')
+          //this.$router.push('/')
       } catch (error) {
         this.errorMessage = error.response.data.message;
       } finally {
         this.isSubmitting = false;
-        this.redirect()
       }
     },
-    /**
-     * Reindirizzamento alla pagina del gioco
-     */
-    redirect() {
-      this.$router.push(`/gameReview/${this.$route.params.idGame}`)
-    }
   },
 };
 </script>

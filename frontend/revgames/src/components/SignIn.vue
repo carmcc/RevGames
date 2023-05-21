@@ -18,14 +18,6 @@
       <label>Password:</label>
       <input type="password" v-model="password" required>
     </div>
-    <!--      <div>-->
-    <!--        <button type="submit">Registrati</button>-->
-    <!--      </div>-->
-    <!--    <div class="checkbox mb-3">-->
-    <!--      <label>-->
-    <!--        <input type="checkbox" value="remember-me"> Remember me-->
-    <!--      </label>-->
-    <!--    </div>-->
     <button class="btn btn-lg btn-primary btn-block" type="submit" :disabled="isSubmitting">Sign in</button>
       <div v-if="errorMessage" class ="error-message">{{errorMessage}}</div>
   </form>
@@ -56,6 +48,7 @@ export default {
                     refreshToken: response.data.refreshToken,
                     username: this.username
                 });
+              if (response.status === 200)
                 this.$router.push('/');
             } catch (error) {
                 this.errorMessage = error.response.data.message;

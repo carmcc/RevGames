@@ -14,7 +14,8 @@
                 <label for="url">URL</label>
                 <input type="text" id="url" v-model="game.url" required>
             </div>
-            <button type="submit">Aggiungi gioco</button>
+            <button class="btn btn-lg btn-primary btn-block" type="submit" :disabled="isSubmitting">Aggiungi gioco</button>
+            <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
         </form>
     </div>
 </template>
@@ -31,24 +32,36 @@ export default {
                 description: '',
                 url: '',
             },
+          errorMessage: '',
+          isSubmitting: false
         };
     },
-    methods: {
-        async addGame() {
-            // Esegui qui la logica per l'inserimento del gioco nel tuo backend, ad esempio una chiamata API
-            // Utilizza this.game per accedere ai dati del gioco da inviare al backend
-            await instance.post('/games/addGame', {
-                title: this.game.title,
-                description: this.game.description,
-                url: this.game.url
-            });
+  methods: {
+    async addGame() {
+      this.isSubmitting = true;
+      // Esegui qui la logica per l'inserimento del gioco nel tuo backend, ad esempio una chiamata API
+      // Utilizza this.game per accedere ai dati del gioco da inviare al backend
+      try {
+        const response = await instance.post('/games/addGame', {
+          title: this.game.title,
+          description: this.game.description,
+          url: this.game.url
+        });
+        // Se la chiamata API ha avuto successo, puoi aggiornare la lista dei giochi
+        this.game.title = '';
+        this.game.description = '';
+        this.game.url = '';
 
-            // Dopo l'inserimento, puoi ripulire il form reimpostando i valori
-            this.game.title = '';
-            this.game.description = '';
-            this.game.url = '';
-        },
+        if(response.status === 201)
+          this.$router.push('/');
+        // Dopo l'inserimento, puoi ripulire il form reimpostando i valori
+      } catch (error) {
+        this.errorMessage = error.response.data.message;
+      } finally {
+        this.isSubmitting = false;
+      }
     },
+  },
 };
 </script>
 
@@ -93,5 +106,10 @@ button {
 
 button:hover {
     background-color: #0056b3;
+}
+
+.error-message {
+    color: red;
+    margin-top: 20px;
 }
 </style>
