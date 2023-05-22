@@ -89,12 +89,11 @@ async function invalidateAccessToken(token) {
         if(!invalidToken.includes(token))
             invalidToken.push(token);
         //senza return true, il metodo non si conclude e non viene invalidato il token
-        // return true;
+        return true;
     } catch (error) {
         console.log("Error invalidating token: " + error);
-        // return false;
+        return false;
     }
-    return true;
 }
 
 /**
