@@ -56,16 +56,13 @@ export default {
         async submitReview() {
             this.isSubmitting = true;
             try {
-                // Logica per inviare la recensione al backend
                 const parsedRating = parseInt(this.editedReview.rating, 10);
                 const parsedReviewId = parseInt(this.review.id, 10);
-                // const parsedGameId = parseInt(this.review.idGame, 10);
                 const response = await instance.put("/review/updateReview", {
                     id: parsedReviewId,
                     rating: parsedRating,
                     description: this.editedReview.description
                 });
-                // Esegui il reset dei campi
                 this.editedReview.rating = '';
                 this.editedReview.description = '';
                 this.characterCount = 0;

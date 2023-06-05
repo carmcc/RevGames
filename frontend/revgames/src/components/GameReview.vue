@@ -91,7 +91,6 @@ export default {
   },
   methods: {
       navigateToAddReview() {
-          // Utilizza il router per navigare alla pagina per aggiungere una recensione
           this.$router.push({
               name: 'AddReview',
               params: {

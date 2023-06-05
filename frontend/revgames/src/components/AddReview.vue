@@ -79,7 +79,6 @@ export default {
     async submitReview() {
       this.isSubmitting = true;
       try {
-        // Logica per inviare la recensione al backend
         const parsedRating = parseInt(this.review.rating, 10);
         const parsedUserId = parseInt(this.loggedId, 10);
         const parsedGameId = parseInt(this.$route.params.idGame, 10);
@@ -90,14 +89,12 @@ export default {
               userId: parsedUserId,
               gameId: parsedGameId
             })
-        // Esegui il reset dei campi
         this.review.rating = '';
         this.review.description = '';
         this.characterCount = 0;
 
         if (response.status === 201)
           this.$router.push('/')
-          //this.$router.push('/')
       } catch (error) {
         this.errorMessage = error.response.data.message;
       } finally {
