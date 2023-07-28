@@ -53,7 +53,6 @@ export default {
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
 :root {
     --jumbotron-padding-y: 3rem;

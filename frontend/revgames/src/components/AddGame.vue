@@ -47,15 +47,12 @@ export default {
       },
     async addGame() {
       this.isSubmitting = true;
-      // Esegui qui la logica per l'inserimento del gioco nel tuo backend, ad esempio una chiamata API
-      // Utilizza this.game per accedere ai dati del gioco da inviare al backend
       try {
         const response = await instance.post('/games/addGame', {
           title: this.game.title,
           description: this.game.description,
           url: this.game.url
         });
-        // Se la chiamata API ha avuto successo, puoi aggiornare la lista dei giochi
         this.game.title = '';
         this.game.description = '';
         this.game.url = '';
@@ -64,7 +61,6 @@ export default {
 
           if(response.status === 201)
           this.$router.push('/');
-        // Dopo l'inserimento, puoi ripulire il form reimpostando i valori
       } catch (error) {
         this.errorMessage = error.response.data.message;
       } finally {
