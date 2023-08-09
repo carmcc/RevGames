@@ -20,4 +20,4 @@ Oltre all’utente normale, sara’ presente anche un utente admin, che avra’ 
 
 ## Licenza
 
-Questo progetto è distribuito con la licenza MIT. Consulta il file LICENSE per ulteriori informazioni.
+Questo progetto è distribuito con la licenza MIT. Consulta il file [LICENSE](https://github.com/MrEntity303/RevGames/blob/main/LICENSE) per ulteriori informazioni.
