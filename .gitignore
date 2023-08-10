@@ -263,7 +263,7 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/java,linux,kotlin,windows,intellij+all,jetbrains+all,visualstudiocode,maven
-/backend/src/it/unicam/cs/pawm/node_modules/
+/backend/revgames/src/it/unicam/cs/pawm/node_modules/
 /frontend/scoregame/node_modules
 .DS_Store
 node_modules

@@ -7,7 +7,7 @@ Oltre all’utente normale, sara’ presente anche un utente admin, che avra’ 
 
 ## Installazione
 
-1. Clonare il repository: git clone https://github.com/MrEntity303/RevGames
+1. Clonare il repository: `git clone https://github.com/MrEntity303/RevGames`
 2. Entrare nella directory del progetto: `cd RevGames`
 3. Installare le dipendenze: `npm install`
 
@@ -20,4 +20,4 @@ Oltre all’utente normale, sara’ presente anche un utente admin, che avra’ 
 
 ## Licenza
 
-Questo progetto è distribuito con la licenza MIT. Consulta il file LICENSE per ulteriori informazioni.
+Questo progetto è distribuito con la licenza MIT. Consulta il file [LICENSE](https://github.com/MrEntity303/RevGames/blob/main/LICENSE) per ulteriori informazioni.
